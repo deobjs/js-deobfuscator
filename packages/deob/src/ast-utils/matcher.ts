@@ -3,9 +3,9 @@ import * as t from '@babel/types'
 import * as m from '@codemod/matchers'
 
 export const anyLiteral: m.Matcher<t.Literal> = m.matcher(
-  node =>
-    t.isLiteral(node)
-    && (!t.isTemplateLiteral(node) || node.expressions.length === 0),
+  (node) =>
+    t.isLiteral(node) &&
+    (!t.isTemplateLiteral(node) || node.expressions.length === 0),
 )
 
 export function infiniteLoop(
@@ -82,7 +82,7 @@ export function findParent<T extends t.Node>(
   path: NodePath,
   matcher: m.Matcher<T>,
 ): NodePath<T> | null {
-  return path.findParent(path =>
+  return path.findParent((path) =>
     matcher.match(path.node),
   ) as NodePath<T> | null
 }
@@ -96,7 +96,7 @@ export function findPath<T extends t.Node>(
   path: NodePath,
   matcher: m.Matcher<T>,
 ): NodePath<T> | null {
-  return path.find(path => matcher.match(path.node)) as NodePath<T> | null
+  return path.find((path) => matcher.match(path.node)) as NodePath<T> | null
 }
 
 /**
@@ -110,13 +110,14 @@ export function createFunctionMatcher(
   ) => m.Matcher<t.Statement[]> | m.Matcher<t.Statement>[],
 ): m.Matcher<t.FunctionExpression> {
   const captures = Array.from({ length: params }, () =>
-    m.capture(m.anyString()))
+    m.capture(m.anyString()),
+  )
 
   return m.functionExpression(
     undefined,
     captures.map(m.identifier),
     m.blockStatement(
-      body(...captures.map(c => m.identifier(m.fromCapture(c)))),
+      body(...captures.map((c) => m.identifier(m.fromCapture(c)))),
     ),
   )
 }
@@ -135,33 +136,33 @@ export function isReadonlyObject(
   function isPatternAssignment(member: NodePath<t.Node>) {
     return (
       // [obj.property] = [1];
-      member.parentPath?.isArrayPattern()
+      member.parentPath?.isArrayPattern() ||
       // ([obj.property = 1] = [])
-      || member.parentPath?.isAssignmentPattern()
+      member.parentPath?.isAssignmentPattern() ||
       // ({ property: obj.property } = {})
-      || member.parentPath?.parentPath?.isObjectPattern()
+      member.parentPath?.parentPath?.isObjectPattern() ||
       // ({ property: obj.property = 1 } = {})
-      || member.parentPath?.isAssignmentPattern()
+      member.parentPath?.isAssignmentPattern()
     )
   }
 
   return binding.referencePaths.every(
-    path =>
+    (path) =>
       // obj.property
-      memberAccess.match(path.parent)
+      memberAccess.match(path.parent) &&
       // obj.property = 1
-      && !path.parentPath?.parentPath?.isAssignmentExpression({
+      !path.parentPath?.parentPath?.isAssignmentExpression({
         left: path.parent,
-      })
+      }) &&
       // obj.property++
-      && !path.parentPath?.parentPath?.isUpdateExpression({
+      !path.parentPath?.parentPath?.isUpdateExpression({
         argument: path.parent,
-      })
+      }) &&
       // delete obj.property
-      && !path.parentPath?.parentPath?.isUnaryExpression({
+      !path.parentPath?.parentPath?.isUnaryExpression({
         argument: path.parent,
         operator: 'delete',
-      })
-      && !isPatternAssignment(path.parentPath!),
+      }) &&
+      !isPatternAssignment(path.parentPath!),
   )
 }

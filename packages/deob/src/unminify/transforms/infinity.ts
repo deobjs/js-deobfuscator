@@ -26,8 +26,7 @@ export default {
           if (infinityMatcher.match(path.node)) {
             path.replaceWith(t.identifier('Infinity'))
             this.changes++
-          }
-          else if (negativeInfinityMatcher.match(path.node)) {
+          } else if (negativeInfinityMatcher.match(path.node)) {
             path.replaceWith(t.unaryExpression('-', t.identifier('Infinity')))
             this.changes++
           }

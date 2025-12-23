@@ -8,8 +8,8 @@ export default {
     IfStatement: {
       exit(path) {
         if (
-          !t.isBlockStatement(path.node.consequent)
-          && !t.isEmptyStatement(path.node.consequent)
+          !t.isBlockStatement(path.node.consequent) &&
+          !t.isEmptyStatement(path.node.consequent)
         ) {
           path.node.consequent = t.blockStatement([path.node.consequent])
 
@@ -24,8 +24,8 @@ export default {
     Loop: {
       exit(path) {
         if (
-          !t.isBlockStatement(path.node.body)
-          && !t.isEmptyStatement(path.node.body)
+          !t.isBlockStatement(path.node.body) &&
+          !t.isEmptyStatement(path.node.body)
         ) {
           path.node.body = t.blockStatement([path.node.body])
 
@@ -36,9 +36,7 @@ export default {
     ArrowFunctionExpression: {
       exit(path) {
         if (t.isSequenceExpression(path.node.body)) {
-          path.node.body = t.blockStatement([
-            t.returnStatement(path.node.body),
-          ])
+          path.node.body = t.blockStatement([t.returnStatement(path.node.body)])
 
           this.changes++
         }

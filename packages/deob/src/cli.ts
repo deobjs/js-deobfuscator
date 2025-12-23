@@ -40,8 +40,7 @@ program
 
     if (output) {
       await result.save(output)
-    }
-    else {
+    } else {
       console.log(result.code)
     }
   })

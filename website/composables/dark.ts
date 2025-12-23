@@ -1,10 +1,10 @@
 export const isDark = useDark()
 
-const isAppearanceTransition
-  = typeof document !== 'undefined'
+const isAppearanceTransition =
+  typeof document !== 'undefined' &&
   // @ts-expect-error: Transition API
-  && document.startViewTransition
-  && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  document.startViewTransition &&
+  !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 /**
  * Credit to [@hooray](https://github.com/hooray)

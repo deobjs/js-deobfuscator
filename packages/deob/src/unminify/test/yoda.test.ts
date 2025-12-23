@@ -18,8 +18,7 @@ test('loose inequality', () =>
 
 test('less than', () => expectJS('0 < x').toMatchInlineSnapshot('x > 0;'))
 
-test('less or equal', () =>
-  expectJS('0 <= x').toMatchInlineSnapshot('x >= 0;'))
+test('less or equal', () => expectJS('0 <= x').toMatchInlineSnapshot('x >= 0;'))
 
 test('greater than', () => expectJS('0 > x').toMatchInlineSnapshot('x < 0;'))
 
@@ -42,8 +41,7 @@ test('number', () => expectJS('1 == x').toMatchInlineSnapshot('x == 1;'))
 test('negative number', () =>
   expectJS('-1 == x').toMatchInlineSnapshot('x == -1;'))
 
-test('boolean', () =>
-  expectJS('true == x').toMatchInlineSnapshot('x == true;'))
+test('boolean', () => expectJS('true == x').toMatchInlineSnapshot('x == true;'))
 
 test('null', () => expectJS('null == x').toMatchInlineSnapshot('x == null;'))
 

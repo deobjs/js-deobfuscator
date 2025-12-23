@@ -26,18 +26,17 @@ export default {
       ExpressionStatement: {
         exit(path) {
           if (t.isSequenceExpression(path.node.expression)) {
-            const statements = path.node.expression.expressions.map(expr =>
+            const statements = path.node.expression.expressions.map((expr) =>
               t.expressionStatement(expr),
             )
             path.replaceWithMultiple(statements)
             this.changes++
-          }
-          else if (assignmentMatcher.match(path.node)) {
+          } else if (assignmentMatcher.match(path.node)) {
             const value = assignedSequence.current!.expressions.pop()!
             const statements = assignedSequence.current!.expressions.map(
-              expr => t.expressionStatement(expr),
-            );
-            (path.get('expression.right') as NodePath<t.Node>).replaceWith(
+              (expr) => t.expressionStatement(expr),
+            )
+            ;(path.get('expression.right') as NodePath<t.Node>).replaceWith(
               value,
             )
             path.insertBefore(statements)
@@ -50,7 +49,7 @@ export default {
           if (t.isSequenceExpression(path.node.argument)) {
             const expressions = path.node.argument.expressions
             path.node.argument = expressions.pop()
-            const statements = expressions.map(expr =>
+            const statements = expressions.map((expr) =>
               t.expressionStatement(expr),
             )
             path.insertBefore(statements)
@@ -63,7 +62,7 @@ export default {
           if (t.isSequenceExpression(path.node.test)) {
             const expressions = path.node.test.expressions
             path.node.test = expressions.pop()!
-            const statements = expressions.map(expr =>
+            const statements = expressions.map((expr) =>
               t.expressionStatement(expr),
             )
             path.insertBefore(statements)
@@ -76,7 +75,7 @@ export default {
           if (t.isSequenceExpression(path.node.discriminant)) {
             const expressions = path.node.discriminant.expressions
             path.node.discriminant = expressions.pop()!
-            const statements = expressions.map(expr =>
+            const statements = expressions.map((expr) =>
               t.expressionStatement(expr),
             )
             path.insertBefore(statements)
@@ -89,7 +88,7 @@ export default {
           if (t.isSequenceExpression(path.node.argument)) {
             const expressions = path.node.argument.expressions
             path.node.argument = expressions.pop()!
-            const statements = expressions.map(expr =>
+            const statements = expressions.map((expr) =>
               t.expressionStatement(expr),
             )
             path.insertBefore(statements)
@@ -104,7 +103,7 @@ export default {
           if (matcher.match(path.node)) {
             const expressions = sequence.current!.expressions
             path.node.right = expressions.pop()!
-            const statements = expressions.map(expr =>
+            const statements = expressions.map((expr) =>
               t.expressionStatement(expr),
             )
             path.insertBefore(statements)
@@ -115,7 +114,7 @@ export default {
       ForStatement: {
         exit(path) {
           if (t.isSequenceExpression(path.node.init)) {
-            const statements = path.node.init.expressions.map(expr =>
+            const statements = path.node.init.expressions.map((expr) =>
               t.expressionStatement(expr),
             )
             path.insertBefore(statements)
@@ -123,12 +122,12 @@ export default {
             this.changes++
           }
           if (
-            t.isSequenceExpression(path.node.update)
-            && path.node.body.type === 'EmptyStatement'
+            t.isSequenceExpression(path.node.update) &&
+            path.node.body.type === 'EmptyStatement'
           ) {
             const expressions = path.node.update.expressions
             path.node.update = expressions.pop()!
-            const statements = expressions.map(expr =>
+            const statements = expressions.map((expr) =>
               t.expressionStatement(expr),
             )
             path.node.body = t.blockStatement(statements)
@@ -145,13 +144,12 @@ export default {
           if (matcher.match(path.node)) {
             const expressions = sequence.current!.expressions
             path.node.declarations[0].init = expressions.pop()
-            const statements = expressions.map(expr =>
+            const statements = expressions.map((expr) =>
               t.expressionStatement(expr),
             )
             if (path.parentPath.isForStatement() && path.key === 'init') {
               path.parentPath.insertBefore(statements)
-            }
-            else {
+            } else {
               path.insertBefore(statements)
             }
             this.changes++

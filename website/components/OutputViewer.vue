@@ -16,14 +16,17 @@ const tabs = {
       <button
         v-for="(_, tab) in tabs"
         :key="tab"
-        class="px-3 py-0.5 text-base cursor-pointer bg-zinc50 hover:bg-zinc300 transition dark:(bg-zinc-900 hover:bg-zinc-600)" :class="[
+        class="px-3 py-0.5 text-base cursor-pointer bg-zinc50 hover:bg-zinc300 transition dark:(bg-zinc-900 hover:bg-zinc-600)"
+        :class="[
           { active: currentTab === tab },
         ]"
         @click="currentTab = tab"
       >
         {{ tab }}
       </button>
-      <span v-if="parseTime" class="flex-1 text-right mr-2">{{ parseTime }} ms</span>
+      <span v-if="parseTime" class="flex-1 text-right mr-2"
+        >{{ parseTime }} ms</span
+      >
     </div>
     <keep-alive>
       <component :is="tabs[currentTab]" />

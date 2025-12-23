@@ -2,7 +2,10 @@ import jsonToAst from 'json-to-ast'
 
 export const editorCursor = ref<number>(0)
 
-export interface Range { start: number; end: number }
+export interface Range {
+  start: number
+  end: number
+}
 export type JsonNode =
   | jsonToAst.IdentifierNode
   | jsonToAst.PropertyNode
@@ -10,8 +13,7 @@ export type JsonNode =
 
 export function collectPositionMap(ast: any, parser: any) {
   const { getAstLocation } = parser
-  if (!getAstLocation)
-    return
+  if (!getAstLocation) return
 
   const astAst = jsonToAst(ast, { loc: true })
 
@@ -19,8 +21,7 @@ export function collectPositionMap(ast: any, parser: any) {
   const positionMap: Map<Range, Range> = new Map()
   traverseNode(astAst, (node) => {
     const range = getAstLocation(node)
-    if (!range)
-      return
+    if (!range) return
     positionMap.set(
       { start: node.loc!.start.offset, end: node.loc!.end.offset },
       range,
@@ -34,7 +35,7 @@ export function collectPositionMap(ast: any, parser: any) {
     switch (node.type) {
       case 'Array':
       case 'Object':
-        node.children.forEach(n => traverseNode(n, cb))
+        node.children.forEach((n) => traverseNode(n, cb))
         break
       case 'Property':
         cb(node.key)
@@ -52,11 +53,10 @@ export function getJsonValue(
 ) {
   let current: JsonNode | undefined = node
   for (const sub of path) {
-    if (!current)
-      return
+    if (!current) return
     switch (current.type) {
       case 'Object':
-        current = current.children.find(n => n.key.value === sub)?.value
+        current = current.children.find((n) => n.key.value === sub)?.value
         break
       case 'Array':
         current = current.children[sub as number]
@@ -65,7 +65,6 @@ export function getJsonValue(
         return
     }
   }
-  if (current?.type === 'Literal')
-    return current.value
+  if (current?.type === 'Literal') return current.value
   return current
 }

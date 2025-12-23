@@ -2,9 +2,7 @@ import type { Binding, NodePath } from '@babel/traverse'
 import * as t from '@babel/types'
 import type { FunctionExpression } from '@babel/types'
 import * as m from '@codemod/matchers'
-import type {
-  Transform,
-} from '../ast-utils'
+import type { Transform } from '../ast-utils'
 import {
   applyTransform,
   constKey,
@@ -27,7 +25,7 @@ export default {
   scope: true,
   visitor() {
     const varId = m.capture(m.identifier())
-    const propertyName = m.matcher<string>(name => /^[a-z]{5}$/i.test(name))
+    const propertyName = m.matcher<string>((name) => /^[a-z]{5}$/i.test(name))
     const propertyKey = constKey(propertyName)
     const propertyValue = m.or(
       // E.g. "6|0|4|3|1|5|2"
@@ -46,8 +44,8 @@ export default {
       // E.g. function (a, b, c) { return a(b, c) } with an arbitrary number of arguments
       m.matcher<FunctionExpression>((node) => {
         return (
-          t.isFunctionExpression(node)
-          && createFunctionMatcher(node.params.length, (...params) => [
+          t.isFunctionExpression(node) &&
+          createFunctionMatcher(node.params.length, (...params) => [
             m.returnStatement(m.callExpression(params[0], params.slice(1))),
           ]).match(node)
         )
@@ -123,26 +121,25 @@ export default {
         if (!isReadonlyObject(binding, memberAccess)) return changes
 
         const props = new Map(
-          objectProperties.current!.map(p => [
+          objectProperties.current!.map((p) => [
             getPropName(p.key),
             p.value as t.FunctionExpression | t.StringLiteral,
           ]),
         )
         if (!props.size) return changes
 
-        const oldRefs = [...binding.referencePaths];
+        const oldRefs = [...binding.referencePaths]
 
         // Have to loop backwards because we might replace a node that
         // contains another reference to the binding (https://github.com/babel/babel/issues/12943)
-        [...binding.referencePaths].reverse().forEach((ref) => {
+        ;[...binding.referencePaths].reverse().forEach((ref) => {
           const memberPath = ref.parentPath as NodePath<t.MemberExpression>
           const propName = getPropName(memberPath.node.property)!
           const value = props.get(propName)!
 
           if (t.isStringLiteral(value)) {
             memberPath.replaceWith(value)
-          }
-          else {
+          } else {
             inlineFunction(
               value,
               memberPath.parentPath as NodePath<t.CallExpression>,
@@ -191,8 +188,7 @@ export default {
               assignedValue.current!,
             ),
           )
-        }
-        else {
+        } else {
           break
         }
       }

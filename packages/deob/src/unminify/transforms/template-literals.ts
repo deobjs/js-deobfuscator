@@ -37,7 +37,7 @@ export default {
         constMemberExpression(
           m.or(
             m.stringLiteral(),
-            m.matcher(node => concatMatcher.match(node)),
+            m.matcher((node) => concatMatcher.match(node)),
           ),
           'concat',
         ),
@@ -59,8 +59,8 @@ export default {
       CallExpression: {
         exit(path) {
           if (
-            concatMatcher.match(path.node)
-            && !concatMatcher.match(path.parentPath.parent)
+            concatMatcher.match(path.node) &&
+            !concatMatcher.match(path.parentPath.parent)
           ) {
             const parts = flattenConcats(path.node)
             const quasis: t.TemplateElement[] = []
@@ -74,12 +74,10 @@ export default {
               if (part.type === 'StringLiteral') {
                 if (followedByString) {
                   nextPart.value = part.value + nextPart.value
-                }
-                else {
+                } else {
                   quasis.push(t.templateElement({ raw: escape(part.value) }))
                 }
-              }
-              else {
+              } else {
                 expressions.push(part)
                 if (!followedByString) {
                   quasis.push(t.templateElement({ raw: '' }))

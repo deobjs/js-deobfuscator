@@ -61,7 +61,7 @@ export class VMDecoder {
     const stringArrayCode = generate(stringArray.path.node, generateOptions)
     const rotatorCode = rotator ? generate(rotator.node, generateOptions) : ''
     const decoderCode = decoders
-      .map(decoder => generate(decoder.path.node, generateOptions))
+      .map((decoder) => generate(decoder.path.node, generateOptions))
       .join(';\n')
 
     this.setupCode = [stringArrayCode, rotatorCode, decoderCode].join(';\n')

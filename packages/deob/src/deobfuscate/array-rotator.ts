@@ -2,11 +2,7 @@ import type { NodePath } from '@babel/traverse'
 import type * as t from '@babel/types'
 import * as m from '@codemod/matchers'
 import { callExpression } from '@codemod/matchers'
-import {
-  constMemberExpression,
-  findParent,
-  infiniteLoop,
-} from '../ast-utils'
+import { constMemberExpression, findParent, infiniteLoop } from '../ast-utils'
 import type { StringArray } from './string-array'
 
 export type ArrayRotator = NodePath<t.ExpressionStatement>
@@ -51,8 +47,8 @@ export function findArrayRotator(
               return (
                 m
                   .containerOf(callExpression(m.identifier('parseInt')))
-                  .match(node)
-                && m
+                  .match(node) &&
+                m
                   .blockStatement([
                     m.tryStatement(
                       m.containerOf(pushShift),

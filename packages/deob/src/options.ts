@@ -55,7 +55,9 @@ export const defaultOptions: Required<Options> = {
   isMinifiedEnable: false,
 }
 
-export function mergeOptions(options: Options): asserts options is Required<Options> {
+export function mergeOptions(
+  options: Options,
+): asserts options is Required<Options> {
   const mergedOptions: Required<Options> = {
     ...defaultOptions,
     ...options,

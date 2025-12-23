@@ -59,7 +59,7 @@ export function inlineObjectProperties(
   if (!varMatcher.match(varDeclarator)) return
 
   const propertyMap = new Map(
-    objectProperties.current!.map(p => [getPropName(p.key), p.value]),
+    objectProperties.current!.map((p) => [getPropName(p.key), p.value]),
   )
   if (
     !binding.referencePaths.every((ref) => {
@@ -110,7 +110,7 @@ export function inlineFunction(
   traverse(clone, {
     Identifier(path) {
       const paramIndex = fn.params.findIndex(
-        p => (p as t.Identifier).name === path.node.name,
+        (p) => (p as t.Identifier).name === path.node.name,
       )
       if (paramIndex !== -1) {
         path.replaceWith(caller.node.arguments[paramIndex])
@@ -155,8 +155,8 @@ export function inlineFunctionAliases(binding: Binding): { changes: number } {
       // It's only a wrapper if the function's params are used in the decode call
       const paramUsedInDecodeCall = fn.node.params.some((param) => {
         const binding = fn.scope.getBinding((param as t.Identifier).name)
-        return binding?.referencePaths.some(ref =>
-          ref.findParent(p => p.node === returnedCall.current),
+        return binding?.referencePaths.some((ref) =>
+          ref.findParent((p) => p.node === returnedCall.current),
         )
       })
       if (!paramUsedInDecodeCall) continue
@@ -170,11 +170,11 @@ export function inlineFunctionAliases(binding: Binding): { changes: number } {
       // E.g. [alias(1071, 1077), alias(1, 2)]
       const callRefs = fnRefs
         .filter(
-          ref =>
-            t.isCallExpression(ref.parent)
-            && t.isIdentifier(ref.parent.callee, { name: fnName.current! }),
+          (ref) =>
+            t.isCallExpression(ref.parent) &&
+            t.isIdentifier(ref.parent.callee, { name: fnName.current! }),
         )
-        .map(ref => ref.parentPath!) as NodePath<t.CallExpression>[]
+        .map((ref) => ref.parentPath!) as NodePath<t.CallExpression>[]
 
       for (const callRef of callRefs) {
         inlineFunction(fn.node, callRef)
@@ -233,19 +233,16 @@ export function inlineVariableAliases(
         if (t.isExpressionStatement(ref.parentPath.parent)) {
           // Remove `alias = decoder;`
           ref.parentPath.remove()
-        }
-        else {
+        } else {
           // Replace `(alias = decoder)(1);` with `decoder(1);`
           ref.parentPath.replaceWith(ref.parentPath.node.right)
         }
-      }
-      else if (ref.parentPath?.isVariableDeclarator()) {
+      } else if (ref.parentPath?.isVariableDeclarator()) {
         // Remove `alias = decoder;` of declarator
         ref.parentPath.remove()
       }
       state.changes++
-    }
-    else {
+    } else {
       // Rename the reference
       ref.replaceWith(t.identifier(targetName))
       state.changes++

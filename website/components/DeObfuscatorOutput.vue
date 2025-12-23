@@ -65,9 +65,7 @@ function download() {
       </div>
     </div>
     <div flex="~ 1" min-h-0 min-w-0 mt-1>
-      <div v-if="loading === 'parse'">
-        Parsing...
-      </div>
+      <div v-if="loading === 'parse'">Parsing...</div>
       <div v-else-if="error" overflow-scroll w-full text-red>
         <pre v-text="String(error)" />
       </div>

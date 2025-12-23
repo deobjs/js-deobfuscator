@@ -1,14 +1,14 @@
 {
   "name": "deob",
-  "type": "module",
   "version": "0.3.0",
   "description": "javascript deobfuscate",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "bin": "dist/cli.js",
   "files": [
     "dist"
   ],
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "node esbuild.config.js && tsc -p tsconfig.build.json",
     "watch": "node esbuild.config.js --watch",

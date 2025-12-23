@@ -32,7 +32,10 @@ export const ast = shallowRef<unknown>({})
 export const error = shallowRef<unknown>()
 export const parseTime = ref(0)
 
-export const options = useLocalStorage<Options>(`${PREFIX}options`, defaultOptions)
+export const options = useLocalStorage<Options>(
+  `${PREFIX}options`,
+  defaultOptions,
+)
 
 export const hideEmptyKeys = useLocalStorage(`${PREFIX}hide-empty-keys`, true)
 export const hideLocationData = useLocalStorage(
@@ -44,28 +47,33 @@ export const autoFocus = useLocalStorage<boolean>(`${PREFIX}auto-focus`, true)
 
 const location = useBrowserLocation()
 
-const rawUrlState = location.value.hash ? atou(location.value.hash!.slice(1)) : ''
+const rawUrlState = location.value.hash
+  ? atou(location.value.hash!.slice(1))
+  : ''
 if (rawUrlState) {
   const urlState = JSON.parse(rawUrlState)
   code.value = urlState.c
   options.value = urlState.o
 }
 
-watch([code, options], () => {
-  const serialized = JSON.stringify({
-    c: code.value,
-    o: options.value,
-  })
-  location.value.hash = utoa(serialized)
-}, { deep: true })
+watch(
+  [code, options],
+  () => {
+    const serialized = JSON.stringify({
+      c: code.value,
+      o: options.value,
+    })
+    location.value.hash = utoa(serialized)
+  },
+  { deep: true },
+)
 
 export const parserContextMap: Record<string, unknown> = shallowReactive(
   Object.create(null),
 )
 async function initParser() {
   const { id, init } = currentParser.value
-  if (parserContextMap[id])
-    return parserContextMap[id]
+  if (parserContextMap[id]) return parserContextMap[id]
   return (parserContextMap[id] = await init?.())
 }
 
@@ -84,12 +92,10 @@ watch(
         options.value,
       )
       error.value = null
-    }
-    catch (err) {
+    } catch (err) {
       error.value = err
       console.error(err)
-    }
-    finally {
+    } finally {
       loading.value = false
     }
   },

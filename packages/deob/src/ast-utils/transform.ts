@@ -1,8 +1,4 @@
-import type {
-  Node,
-  TraverseOptions,
-  Visitor,
-} from '@babel/traverse'
+import type { Node, TraverseOptions, Visitor } from '@babel/traverse'
 import traverse, { visitors } from '@babel/traverse'
 import debug from 'debug'
 
@@ -52,7 +48,7 @@ export function applyTransforms(
   options: { noScope?: boolean; name?: string; log?: boolean } = {},
 ): TransformState {
   options.log ??= true
-  const name = options.name ?? transforms.map(t => t.name).join(', ')
+  const name = options.name ?? transforms.map((t) => t.name).join(', ')
   if (options.log) logger(`${name}: started`)
   const state: TransformState = { changes: 0 }
 
@@ -60,11 +56,11 @@ export function applyTransforms(
     transform.run?.(ast, state)
   }
 
-  const traverseOptions = transforms.flatMap(t => t.visitor?.() ?? [])
+  const traverseOptions = transforms.flatMap((t) => t.visitor?.() ?? [])
   if (traverseOptions.length > 0) {
-    const visitor: TraverseOptions<TransformState>
-      = visitors.merge(traverseOptions)
-    visitor.noScope = options.noScope || transforms.every(t => !t.scope)
+    const visitor: TraverseOptions<TransformState> =
+      visitors.merge(traverseOptions)
+    visitor.noScope = options.noScope || transforms.every((t) => !t.scope)
     traverse(ast, visitor, undefined, state)
   }
 
@@ -84,8 +80,9 @@ export interface Transform<TOptions = unknown> {
   visitor?: (options?: TOptions) => Visitor<TransformState>
 }
 
-export interface AsyncTransform<TOptions = unknown>
-  extends Transform<TOptions> {
+export interface AsyncTransform<
+  TOptions = unknown,
+> extends Transform<TOptions> {
   run?: (ast: Node, state: TransformState, options?: TOptions) => Promise<void>
 }
 

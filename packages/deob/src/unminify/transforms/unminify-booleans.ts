@@ -10,8 +10,7 @@ export default {
       if (trueMatcher.match(path.node)) {
         path.replaceWith(t.booleanLiteral(true))
         this.changes++
-      }
-      else if (falseMatcher.match(path.node)) {
+      } else if (falseMatcher.match(path.node)) {
         path.replaceWith(t.booleanLiteral(false))
         this.changes++
       }

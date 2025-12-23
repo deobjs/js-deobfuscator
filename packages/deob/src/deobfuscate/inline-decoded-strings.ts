@@ -13,7 +13,7 @@ export default {
   async run(ast, state, options) {
     if (!options) return
 
-    const calls = options.vm.decoders.flatMap(decoder =>
+    const calls = options.vm.decoders.flatMap((decoder) =>
       decoder.collectCalls(),
     )
     const decodedValues = await options.vm.decode(calls)

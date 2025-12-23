@@ -25,8 +25,7 @@ export default {
               }),
             )
             this.changes++
-          }
-          else if (orMatcher.match(path.node)) {
+          } else if (orMatcher.match(path.node)) {
             path.replaceWith(
               buildIfNot({
                 TEST: expression.left,

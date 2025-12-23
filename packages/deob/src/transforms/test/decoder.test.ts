@@ -21,7 +21,7 @@ describe('decoder', async () => {
     evalCode(setupCode)
     decodeStrings(decoders)
 
-    decoders.forEach(d => d.path.remove())
+    decoders.forEach((d) => d.path.remove())
 
     expect(decoders[0].name).toBe('decoder')
     expect(generate(ast)).toMatchInlineSnapshot(`
@@ -46,7 +46,7 @@ describe('decoder', async () => {
     decodeStrings(decoders)
 
     stringArray?.path.remove()
-    decoders.forEach(d => d.path.remove())
+    decoders.forEach((d) => d.path.remove())
     expect(stringArray!.name).toBe('arr')
     expect(decoders[0].name).toBe('decoder')
 

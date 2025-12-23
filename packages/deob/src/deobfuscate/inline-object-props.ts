@@ -32,7 +32,7 @@ export default {
   scope: true,
   visitor() {
     const varId = m.capture(m.identifier())
-    const propertyName = m.matcher<string>(name => /^[\w]+$/i.test(name))
+    const propertyName = m.matcher<string>((name) => /^[\w]+$/i.test(name))
     const propertyKey = constKey(propertyName)
     // E.g. "_0x51b74a": 0x80
     const objectProperties = m.capture(

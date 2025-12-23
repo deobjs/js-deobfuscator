@@ -49,12 +49,16 @@ export default {
     return {
       SwitchStatement(path) {
         // 判断父节点是否为循环节点
-        const forOrWhileStatementPath = path.findParent(p => p.isForStatement() || p.isWhileStatement())
+        const forOrWhileStatementPath = path.findParent(
+          (p) => p.isForStatement() || p.isWhileStatement(),
+        )
 
         if (!forOrWhileStatementPath) return
 
         // 拿到函数的块语句
-        const fnBlockStatementPath = forOrWhileStatementPath.findParent(p => p.isBlockStatement()) as unknown as NodePath<t.BlockStatement>
+        const fnBlockStatementPath = forOrWhileStatementPath.findParent((p) =>
+          p.isBlockStatement(),
+        ) as unknown as NodePath<t.BlockStatement>
         if (!fnBlockStatementPath) return
 
         let shufferArr: string[] = []
@@ -65,19 +69,19 @@ export default {
             const { object, property } = path.node
             const propertyName = getPropName(property)
             if (
-              (t.isStringLiteral(property)
-                  || t.isIdentifier(property))
-                && propertyName === 'split'
+              (t.isStringLiteral(property) || t.isIdentifier(property)) &&
+              propertyName === 'split'
             ) {
               if (t.isStringLiteral(object)) {
                 const shufferString = object.value // "1|3|2|0"
                 shufferArr = shufferString.split('|')
 
                 // 顺带移除 var _0x263cfa = "1|3|2|0"["split"]("|"),
-                const VariableDeclarator = path.findParent(p => p.isVariableDeclarator())
+                const VariableDeclarator = path.findParent((p) =>
+                  p.isVariableDeclarator(),
+                )
 
-                if (VariableDeclarator)
-                  VariableDeclarator.remove()
+                if (VariableDeclarator) VariableDeclarator.remove()
 
                 path.stop()
               }
@@ -85,16 +89,15 @@ export default {
           },
         })
 
-        if (shufferArr.length === 0)
-          return
+        if (shufferArr.length === 0) return
 
         const myArr = path.node.cases
-          .filter(p => p.test?.type === 'StringLiteral')
-          .map(p => p.consequent[0])
+          .filter((p) => p.test?.type === 'StringLiteral')
+          .map((p) => p.consequent[0])
 
         const sequences = shufferArr
-          .map(s => myArr[Number(s)])
-          .filter(s => s?.type !== 'ContinueStatement') // 如果 case 语句 只有 continue 则跳过
+          .map((s) => myArr[Number(s)])
+          .filter((s) => s?.type !== 'ContinueStatement') // 如果 case 语句 只有 continue 则跳过
 
         fnBlockStatementPath.node.body.push(...sequences)
 

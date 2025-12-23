@@ -30,12 +30,12 @@ export class Decoder {
     const literalArgument: m.Matcher<t.Expression> = m.or(
       m.binaryExpression(
         m.anything(),
-        m.matcher(node => literalArgument.match(node)),
-        m.matcher(node => literalArgument.match(node)),
+        m.matcher((node) => literalArgument.match(node)),
+        m.matcher((node) => literalArgument.match(node)),
       ),
       m.unaryExpression(
         '-',
-        m.matcher(node => literalArgument.match(node)),
+        m.matcher((node) => literalArgument.match(node)),
       ),
       m.numericLiteral(),
       m.stringLiteral(),
@@ -71,11 +71,9 @@ export class Decoder {
         )
         // some of the scope information is somehow lost after replacing
         replacement.scope.crawl()
-      }
-      else if (literalCall.match(ref.parent)) {
+      } else if (literalCall.match(ref.parent)) {
         calls.push(ref.parentPath as NodePath<t.CallExpression>)
-      }
-      else if (expressionCall.match(ref.parent)) {
+      } else if (expressionCall.match(ref.parent)) {
         // var n = 1; decode(n); -> decode(1);
         ref.parentPath!.traverse({
           ReferencedIdentifier(path) {

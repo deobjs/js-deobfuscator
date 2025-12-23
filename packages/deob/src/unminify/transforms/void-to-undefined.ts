@@ -12,8 +12,8 @@ export default {
       UnaryExpression: {
         exit(path) {
           if (
-            matcher.match(path.node)
-            && !path.scope.hasBinding('undefined', { noGlobals: true })
+            matcher.match(path.node) &&
+            !path.scope.hasBinding('undefined', { noGlobals: true })
           ) {
             path.replaceWith(t.identifier('undefined'))
             this.changes++

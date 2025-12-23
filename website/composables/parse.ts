@@ -13,13 +13,13 @@ export interface Parser<C = unknown, O = unknown> {
     configurable: boolean
   } & (
     | {
-      defaultValue: string
-      defaultValueType: 'javascript'
-    }
+        defaultValue: string
+        defaultValueType: 'javascript'
+      }
     | {
-      defaultValue: O
-      defaultValueType?: 'json5'
-    }
+        defaultValue: O
+        defaultValueType?: 'json5'
+      }
   )
   getAstLocation?(ast: JsonNode): Range | undefined
 }
@@ -54,15 +54,12 @@ export function getAstLocation(
   preset: keyof typeof astLocationFields,
   node: JsonNode,
 ) {
-  if (node.type !== 'Object')
-    return
-  if (!getJsonValue(node, astLocationFields[preset].type))
-    return
+  if (node.type !== 'Object') return
+  if (!getJsonValue(node, astLocationFields[preset].type)) return
 
   const start = getJsonValue(node, astLocationFields[preset].start)
   const end = getJsonValue(node, astLocationFields[preset].end)
-  if (typeof start !== 'number' || typeof end !== 'number')
-    return
+  if (typeof start !== 'number' || typeof end !== 'number') return
 
   return { start, end }
 }
@@ -85,8 +82,8 @@ const babel: Parser<typeof Babel, Babel.ParserOptions> = {
   init: () => import('https://cdn.jsdelivr.net/npm/@babel/parser/+esm'),
   version: () =>
     fetch('https://cdn.jsdelivr.net/npm/@babel/parser/package.json')
-      .then(r => r.json())
-      .then(raw => `@babel/parser@${raw.version}`),
+      .then((r) => r.json())
+      .then((raw) => `@babel/parser@${raw.version}`),
   parse(code, options) {
     return this.parse(code, { ...options })
   },

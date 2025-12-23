@@ -12,27 +12,25 @@ export default {
           if (path.key === 'init' && path.parentPath.isForStatement()) {
             if (!path.parentPath.node.test && !path.parentPath.node.update) {
               path.parentPath.insertBefore(
-                path.node.declarations.map(declaration =>
+                path.node.declarations.map((declaration) =>
                   t.variableDeclaration(path.node.kind, [declaration]),
                 ),
               )
               path.remove()
               this.changes++
             }
-          }
-          else {
+          } else {
             if (path.parentPath.isExportNamedDeclaration()) {
               path.parentPath.replaceWithMultiple(
-                path.node.declarations.map(declaration =>
+                path.node.declarations.map((declaration) =>
                   t.exportNamedDeclaration(
                     t.variableDeclaration(path.node.kind, [declaration]),
                   ),
                 ),
               )
-            }
-            else {
+            } else {
               path.replaceWithMultiple(
-                path.node.declarations.map(declaration =>
+                path.node.declarations.map((declaration) =>
                   t.variableDeclaration(path.node.kind, [declaration]),
                 ),
               )

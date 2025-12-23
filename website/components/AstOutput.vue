@@ -125,21 +125,17 @@ watch(highlightRange, () => highlight(), {
 <template>
   <div flex="~ col 1" min-w-0 h-full>
     <div flex="~ gap-3 wrap" items-center p-0.5 mx-2>
-      <label><input v-model="autoFocus" type="checkbox"> Auto focus</label>
+      <label><input v-model="autoFocus" type="checkbox" /> Auto focus</label>
       <label>
-        <input v-model="hideEmptyKeys" type="checkbox"> Hide empty keys
+        <input v-model="hideEmptyKeys" type="checkbox" /> Hide empty keys
       </label>
       <label>
-        <input v-model="hideLocationData" type="checkbox"> Hide location data
+        <input v-model="hideLocationData" type="checkbox" /> Hide location data
       </label>
     </div>
     <div flex="~ 1" min-h-0 min-w-0>
-      <div v-if="loading === 'load'">
-        Loading parser...
-      </div>
-      <div v-else-if="loading === 'parse'">
-        Parsing...
-      </div>
+      <div v-if="loading === 'load'">Loading parser...</div>
+      <div v-else-if="loading === 'parse'">Parsing...</div>
       <div v-else-if="error" overflow-scroll text-red>
         <pre v-text="String(error)" />
       </div>

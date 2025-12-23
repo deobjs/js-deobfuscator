@@ -28,14 +28,11 @@ export function renameFast(binding: Binding, newName: string): void {
 
     if (ref.isAssignmentExpression() && t.isIdentifier(ref.node.left)) {
       ref.node.left.name = newName
-    }
-    else if (ref.isUpdateExpression() && t.isIdentifier(ref.node.argument)) {
+    } else if (ref.isUpdateExpression() && t.isIdentifier(ref.node.argument)) {
       ref.node.argument.name = newName
-    }
-    else if (ref.isVariableDeclarator() && t.isIdentifier(ref.node.id)) {
+    } else if (ref.isVariableDeclarator() && t.isIdentifier(ref.node.id)) {
       ref.node.id.name = newName
-    }
-    else if (ref.isFor() || patternMatcher.match(ref.node)) {
+    } else if (ref.isFor() || patternMatcher.match(ref.node)) {
       traverse(ref.node, {
         Identifier(path) {
           if (path.scope !== ref.scope) return path.skip()
@@ -45,8 +42,7 @@ export function renameFast(binding: Binding, newName: string): void {
         },
         noScope: true,
       })
-    }
-    else {
+    } else {
       throw new Error(
         `Unexpected constant violation (${ref.type}): ${codePreview(ref.node)}`,
       )

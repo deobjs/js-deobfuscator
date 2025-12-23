@@ -1,9 +1,7 @@
 import type { NodePath } from '@babel/traverse'
 import type * as t from '@babel/types'
 import * as m from '@codemod/matchers'
-import type {
-  Transform,
-} from '../ast-utils'
+import type { Transform } from '../ast-utils'
 import {
   constMemberExpression,
   emptyIife,
@@ -120,14 +118,13 @@ export default {
         //       ^ path/binding
 
         binding.referencePaths
-          .filter(ref => ref.parent.type === 'CallExpression')
+          .filter((ref) => ref.parent.type === 'CallExpression')
           .forEach((ref) => {
             if (ref.parentPath?.parent.type === 'CallExpression') {
               // callControllerFunctionName(this, function () { ... })();
               // ^ ref
               ref.parentPath.parentPath?.remove()
-            }
-            else {
+            } else {
               // const selfDefendingFunctionName = callControllerFunctionName(this, function () {
               // selfDefendingFunctionName();      ^ ref
               removeSelfDefendingRefs(ref as NodePath<t.Identifier>)

@@ -75,8 +75,15 @@ onMounted(() => {
       <label> <span text-sm font-mono>Source Code</span> </label>
       <div flex="~ gap-3 1" justify-end>
         <div class="inline-flex items-center gap-2">
-          <label for="example-select" class="text-sm font-medium">Example: </label>
-          <select id="example-select" name="example-select" class="p-0.5 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:(ring border-blue-300) dark:bg-gray-700" @change="handleExampleChange">
+          <label for="example-select" class="text-sm font-medium"
+            >Example:
+          </label>
+          <select
+            id="example-select"
+            name="example-select"
+            class="p-0.5 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:(ring border-blue-300) dark:bg-gray-700"
+            @change="handleExampleChange"
+          >
             <option value="" />
             <option v-for="e in examples" :key="e.name" :value="e.name">
               {{ e.name }}
@@ -89,8 +96,15 @@ onMounted(() => {
           <div i-ri:brush-3-line @click="beautify" />
         </button>
         <button title="Upload file">
-          <label for="fileInput" cursor-pointer> <div i-ri:upload-line /></label>
-          <input id="fileInput" type="file" style="display: none" @change="handleFileChange">
+          <label for="fileInput" cursor-pointer>
+            <div i-ri:upload-line
+          /></label>
+          <input
+            id="fileInput"
+            type="file"
+            style="display: none"
+            @change="handleFileChange"
+          />
         </button>
         <button title="Clean source code">
           <div i-ri:delete-bin-line @click="clean" />

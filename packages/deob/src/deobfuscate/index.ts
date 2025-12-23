@@ -1,7 +1,5 @@
 import debug from 'debug'
-import type {
-  AsyncTransform,
-} from '../ast-utils'
+import type { AsyncTransform } from '../ast-utils'
 import {
   applyTransform,
   applyTransformAsync,
@@ -17,14 +15,8 @@ import inlineDecodedStrings from './inline-decoded-strings'
 import inlineDecoderWrappers from './inline-decoder-wrappers'
 import inlineObjectProps from './inline-object-props'
 import { findStringArray } from './string-array'
-import type {
-  Sandbox,
-} from './vm'
-import {
-  VMDecoder,
-  createBrowserSandbox,
-  createNodeSandbox,
-} from './vm'
+import type { Sandbox } from './vm'
+import { VMDecoder, createBrowserSandbox, createNodeSandbox } from './vm'
 
 export { createBrowserSandbox, createNodeSandbox, type Sandbox }
 
@@ -69,7 +61,7 @@ export default {
 
     stringArray.path.remove()
     rotator?.remove()
-    decoders.forEach(decoder => decoder.path.remove())
+    decoders.forEach((decoder) => decoder.path.remove())
     state.changes += 2 + decoders.length
 
     state.changes += applyTransforms(

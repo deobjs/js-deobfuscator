@@ -56,8 +56,7 @@ for (const config of configs) {
 
   if (watch) {
     await ctx.watch()
-  }
-  else {
+  } else {
     await ctx.rebuild()
     await ctx.dispose()
   }

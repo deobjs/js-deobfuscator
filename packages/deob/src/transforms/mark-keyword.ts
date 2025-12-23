@@ -14,19 +14,24 @@ export interface Options {
  * // TOLOOK
  * debugger;
  */
-export function markKeyword(ast: t.Node, keywords = ['debugger'], label = ' TOLOOK') {
+export function markKeyword(
+  ast: t.Node,
+  keywords = ['debugger'],
+  label = ' TOLOOK',
+) {
   const defaultKeywords = ['debugger', 'setTimeout', 'setInterval']
-  keywords = [...new Set([...keywords.map(k => k.toLowerCase()), ...defaultKeywords])]
+  keywords = [
+    ...new Set([...keywords.map((k) => k.toLowerCase()), ...defaultKeywords]),
+  ]
 
   traverse(ast, {
     DebuggerStatement: {
       exit(path) {
         // 如果已注释,则跳过
         const hasComment = path.node.leadingComments?.find(
-          c => (c.value = label),
+          (c) => (c.value = label),
         )
-        if (hasComment)
-          return
+        if (hasComment) return
 
         path.addComment('leading', label, true)
       },
@@ -34,8 +39,7 @@ export function markKeyword(ast: t.Node, keywords = ['debugger'], label = ' TOLO
     CallExpression: {
       exit(path) {
         if (t.isIdentifier(path.node.callee)) {
-          if (!keywords.includes(path.node.callee.name))
-            return
+          if (!keywords.includes(path.node.callee.name)) return
           path.addComment('leading', label, true)
         }
       },
@@ -43,9 +47,8 @@ export function markKeyword(ast: t.Node, keywords = ['debugger'], label = ' TOLO
     StringLiteral: {
       exit(path) {
         if (keywords.includes(path.node.value.toLowerCase())) {
-          const statementPath = path.findParent(p => p.isStatement())
-          if (statementPath)
-            statementPath.addComment('leading', label, true)
+          const statementPath = path.findParent((p) => p.isStatement())
+          if (statementPath) statementPath.addComment('leading', label, true)
           else path.addComment('leading', label, true)
         }
       },
@@ -54,9 +57,8 @@ export function markKeyword(ast: t.Node, keywords = ['debugger'], label = ' TOLO
       exit(path) {
         const name = path.node.name
         if (keywords.includes(name.toLowerCase())) {
-          const statementPath = path.findParent(p => p.isStatement())
-          if (statementPath)
-            statementPath.addComment('leading', label, true)
+          const statementPath = path.findParent((p) => p.isStatement())
+          if (statementPath) statementPath.addComment('leading', label, true)
           else path.addComment('leading', label, true)
         }
       },

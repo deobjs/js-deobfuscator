@@ -5,8 +5,7 @@ self.addEventListener(
   ({ data }: { data: { code: string; options: Options } }) => {
     const { code, options } = data
 
-    if (!code || !options)
-      return
+    if (!code || !options) return
 
     const start = performance.now()
 

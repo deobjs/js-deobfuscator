@@ -38,16 +38,16 @@ export default {
         m.identifier('NaN'),
         m.identifier('Infinity'),
       ),
-      m.matcher(node => !t.isLiteral(node)),
+      m.matcher((node) => !t.isLiteral(node)),
     )
 
     return {
       BinaryExpression: {
         exit({ node }) {
           if (matcher.match(node)) {
-            [node.left, node.right] = [node.right, node.left as t.Expression]
-            node.operator
-              = flippedOperators[node.operator as keyof typeof flippedOperators]
+            ;[node.left, node.right] = [node.right, node.left as t.Expression]
+            node.operator =
+              flippedOperators[node.operator as keyof typeof flippedOperators]
             this.changes++
           }
         },

@@ -2,11 +2,7 @@ import type { NodePath } from '@babel/traverse'
 import traverse from '@babel/traverse'
 import type * as t from '@babel/types'
 import * as m from '@codemod/matchers'
-import {
-  inlineArrayElements,
-  isReadonlyObject,
-  renameFast,
-} from '../ast-utils'
+import { inlineArrayElements, isReadonlyObject, renameFast } from '../ast-utils'
 
 export interface StringArray {
   path: NodePath<t.FunctionDeclaration>
@@ -84,7 +80,7 @@ export function findStringArray(ast: t.Node): StringArray | undefined {
       const binding = path.scope.getBinding(arrayIdentifier.current!.name)!
       const memberAccess = m.memberExpression(
         m.fromCapture(arrayIdentifier),
-        m.numericLiteral(m.matcher(value => value < length)),
+        m.numericLiteral(m.matcher((value) => value < length)),
       )
       if (!isReadonlyObject(binding, memberAccess)) return
 

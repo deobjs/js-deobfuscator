@@ -20,7 +20,9 @@ export default {
   name: 'inlineDecoderWrappers',
   tags: ['unsafe'],
   visitor() {
-    const processFunction = (path: NodePath<t.FunctionDeclaration | t.FunctionExpression>) => {
+    const processFunction = (
+      path: NodePath<t.FunctionDeclaration | t.FunctionExpression>,
+    ) => {
       const fnName = path.isFunctionDeclaration()
         ? path.node.id!.name
         : path.parentPath.isVariableDeclarator()
@@ -29,7 +31,9 @@ export default {
 
       // if (decoderNameList.includes(fnName)) return
 
-      const firstStatement = path.get('body').get('body')?.[0] as NodePath<t.ReturnStatement>
+      const firstStatement = path
+        .get('body')
+        .get('body')?.[0] as NodePath<t.ReturnStatement>
 
       // 在原代码中，函数体就一行 return 语句 并且 参数还是函数表达式
       if (firstStatement && firstStatement.isReturnStatement()) {
@@ -50,7 +54,10 @@ export default {
         // 遍历 _0x49afe4(-57, 1080, 828, 469)
         binding.referencePaths.forEach((ref) => {
           // 通过引用找到调用混淆函数的,需要拿到实际传入的参数
-          if (ref.parentKey === 'callee' && ref.parentPath?.isCallExpression()) {
+          if (
+            ref.parentKey === 'callee' &&
+            ref.parentPath?.isCallExpression()
+          ) {
             // 调用传入参数 -57, 1080, 828, 469
             const callFn_args = ref.parentPath.node.arguments
 
@@ -65,12 +72,14 @@ export default {
 
             // 遍历 (_0x254ae1, _0x559602, _0x3dfa50, _0x13ee81)
             wrapFn.node.params.forEach((param, i) => {
-              if (param.type !== 'Identifier')
-                return
+              if (param.type !== 'Identifier') return
 
               // 如果模版中不存在标识符则没有用到
               if (templateCode.includes(param.name)) {
-                templateCode = templateCode.replace(new RegExp(`${param.name}`, 'g'), `%%${param.name}%%`)
+                templateCode = templateCode.replace(
+                  new RegExp(`${param.name}`, 'g'),
+                  `%%${param.name}%%`,
+                )
 
                 // 拿到传入参数 如 第四个参数 _0x13ee81 对应 469
                 const arg = callFn_args[i]

@@ -2,8 +2,13 @@ import traverse from '@babel/traverse'
 import type * as t from '@babel/types'
 import { Decoder } from '../deobfuscate/decoder'
 
-export function designDecoder(ast: t.Node, decoderName: string | string[]): Decoder[] {
-  const decoderNameList = Array.isArray(decoderName) ? decoderName : [decoderName]
+export function designDecoder(
+  ast: t.Node,
+  decoderName: string | string[],
+): Decoder[] {
+  const decoderNameList = Array.isArray(decoderName)
+    ? decoderName
+    : [decoderName]
 
   const decoders: Decoder[] = []
 

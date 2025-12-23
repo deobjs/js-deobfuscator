@@ -44,12 +44,10 @@ export default {
           if (path.get('test').evaluateTruthy()) {
             renameShadowedVariables(path.get('consequent').scope)
             replace(path, path.node.consequent)
-          }
-          else if (path.node.alternate) {
+          } else if (path.node.alternate) {
             renameShadowedVariables(path.get('alternate').scope)
             replace(path, path.node.alternate)
-          }
-          else {
+          } else {
             path.remove()
           }
 
@@ -63,8 +61,7 @@ export default {
 function replace(path: NodePath, node: t.Node) {
   if (t.isBlockStatement(node)) {
     path.replaceWithMultiple(node.body)
-  }
-  else {
+  } else {
     path.replaceWith(node)
   }
 }

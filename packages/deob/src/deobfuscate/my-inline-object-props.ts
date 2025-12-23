@@ -38,17 +38,18 @@ export default {
       MemberExpression(path) {
         // 父级表达式不能是赋值语句
         const asignment = path.parentPath
-        if (!asignment || asignment?.type === 'AssignmentExpression')
-          return
+        if (!asignment || asignment?.type === 'AssignmentExpression') return
 
         const { object, property } = path.node
-        if (object.type === 'Identifier' && (property.type === 'StringLiteral' || property.type === 'Identifier')) {
+        if (
+          object.type === 'Identifier' &&
+          (property.type === 'StringLiteral' || property.type === 'Identifier')
+        ) {
           const objectName = object.name
 
           // 找到 objectName 的定义位置
           const binding = path.scope.getBinding(objectName)
-          if (!binding)
-            return
+          if (!binding) return
 
           const start = binding.identifier.start
 
@@ -62,21 +63,28 @@ export default {
               if (prop.type === 'ObjectProperty') {
                 const keyName = getPropName(prop.key)
                 if (
-                  (prop.key.type === 'StringLiteral'
-                     || prop.key.type === 'Identifier')
-                   && keyName === propertyName
-                   && t.isLiteral(prop.value)
+                  (prop.key.type === 'StringLiteral' ||
+                    prop.key.type === 'Identifier') &&
+                  keyName === propertyName &&
+                  t.isLiteral(prop.value)
                 ) {
                   // 还需要判断 objectName[propertyName] 是否被修改过
                   const binding = path.scope.getBinding(objectName)
-                  if (binding && binding.constant && binding.constantViolations.length === 0) {
+                  if (
+                    binding &&
+                    binding.constant &&
+                    binding.constantViolations.length === 0
+                  ) {
                     // 针对一些特殊代码不进行处理 如 _0x52627b["QqaUY"]++
-                    if (path.parent.type === 'UpdateExpression')
-                      return
+                    if (path.parent.type === 'UpdateExpression') return
 
-                    usedMap.set(`${objectName}.${propertyName}`, generate(prop.value))
+                    usedMap.set(
+                      `${objectName}.${propertyName}`,
+                      generate(prop.value),
+                    )
 
-                    usedObjects[objectName] = usedObjects[objectName] || new Set()
+                    usedObjects[objectName] =
+                      usedObjects[objectName] || new Set()
                     usedObjects[objectName].add(propertyName)
 
                     path.replaceWith(prop.value)
@@ -96,14 +104,16 @@ export default {
     traverse(ast, {
       CallExpression(path) {
         const { callee } = path.node
-        if (callee.type === 'MemberExpression' && callee.object.type === 'Identifier') {
+        if (
+          callee.type === 'MemberExpression' &&
+          callee.object.type === 'Identifier'
+        ) {
           const objectName = callee.object.name
           const propertyName = getPropName(callee.property)
 
           // 找到 objectName 的定义位置
           const binding = path.scope.getBinding(objectName)
-          if (!binding)
-            return
+          if (!binding) return
 
           const start = binding.identifier.start
 
@@ -116,16 +126,15 @@ export default {
             const argumentList = path.node.arguments
 
             for (const prop of properties) {
-              if (prop.type !== 'ObjectProperty')
-                continue
+              if (prop.type !== 'ObjectProperty') continue
 
               const keyName = getPropName(prop.key)
 
               if (
-                (prop.key.type === 'StringLiteral'
-                   || prop.key.type === 'Identifier')
-                 && prop.value.type === 'FunctionExpression'
-                 && keyName === propertyName
+                (prop.key.type === 'StringLiteral' ||
+                  prop.key.type === 'Identifier') &&
+                prop.value.type === 'FunctionExpression' &&
+                keyName === propertyName
               ) {
                 // 拿到定义函数
                 const orgFn = prop.value
@@ -147,8 +156,7 @@ export default {
                   )
                   path.replaceWith(binaryExpression)
                   isReplace = true
-                }
-                else if (t.isLogicalExpression(returnArgument)) {
+                } else if (t.isLogicalExpression(returnArgument)) {
                   // _0x5a2810 || _0x2b32f4
                   const logicalExpression = t.logicalExpression(
                     returnArgument.operator,
@@ -157,8 +165,7 @@ export default {
                   )
                   path.replaceWith(logicalExpression)
                   isReplace = true
-                }
-                else if (t.isUnaryExpression(returnArgument)) {
+                } else if (t.isUnaryExpression(returnArgument)) {
                   // !_0x5a2810
                   const unaryExpression = t.unaryExpression(
                     returnArgument.operator,
@@ -166,22 +173,20 @@ export default {
                   )
                   path.replaceWith(unaryExpression)
                   isReplace = true
-                }
-                else if (t.isCallExpression(returnArgument)) {
+                } else if (t.isCallExpression(returnArgument)) {
                   // function (_0x1d0a4d, _0x1df411) {
                   //   return _0x1d0a4d();
                   // }
 
                   // 取出是哪个参数作为函数名来调用 因为可能会传递多个参数，取其中一个或几个
                   // 确保调用函数名必须是标识符才替换
-                  if (returnArgument.callee.type !== 'Identifier')
-                    return
+                  if (returnArgument.callee.type !== 'Identifier') return
 
                   const callFnName = returnArgument.callee.name // 形参的函数名
 
                   // 找到从传递的多个参数中 定位索引
                   const callIndex = orgFn.params.findIndex(
-                    a => a.name === callFnName,
+                    (a) => a.name === callFnName,
                   )
 
                   // 再从实际参数(实参)中找到真正函数名
@@ -233,7 +238,6 @@ export default {
 
           if (parentPath?.isAssignmentExpression())
             objectName = (parentPath.node.left as t.Identifier).name
-
           else if (parentPath.isVariableDeclarator())
             objectName = (parentPath.node.id as t.Identifier).name
 
@@ -249,10 +253,8 @@ export default {
       })
     }
 
-    if (usedMap.size > 0)
-      console.log(`已被替换对象: `, usedMap)
+    if (usedMap.size > 0) console.log(`已被替换对象: `, usedMap)
 
-    if (removeSet.size > 0)
-      console.log(`已移除key列表:`, removeSet)
+    if (removeSet.size > 0) console.log(`已移除key列表:`, removeSet)
   },
 } satisfies Transform<Objects>

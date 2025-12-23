@@ -48,8 +48,16 @@ export function saveObjects(ast: t.Node) {
 
               // 在同作用域下将变量重命名 var u = e; ---> var e = e; 同时一并移除
               const binding = path.scope.getBinding(objectName)
-              if (!(binding && binding.path.isVariableDeclarator() && binding.path.get('init')?.isObjectExpression())) return
-              if (!binding.constant && binding.constantViolations.length === 0) return
+              if (
+                !(
+                  binding &&
+                  binding.path.isVariableDeclarator() &&
+                  binding.path.get('init')?.isObjectExpression()
+                )
+              )
+                return
+              if (!binding.constant && binding.constantViolations.length === 0)
+                return
 
               parents.push({
                 parentPath: path.getStatementParent()!.parentPath,
@@ -60,7 +68,6 @@ export function saveObjects(ast: t.Node) {
         })
       },
     },
-
   })
 
   /**
@@ -80,13 +87,16 @@ export function saveObjects(ast: t.Node) {
 
         if (!t.isLiteral(left.property)) return
 
-        if (!(
-          t.isFunctionExpression(right)
-              || t.isLiteral(right)
-              || t.isIdentifier(right)
-              || t.isBinaryExpression(right)
-              || t.isObjectExpression(right)
-        )) return
+        if (
+          !(
+            t.isFunctionExpression(right) ||
+            t.isLiteral(right) ||
+            t.isIdentifier(right) ||
+            t.isBinaryExpression(right) ||
+            t.isObjectExpression(right)
+          )
+        )
+          return
 
         const objectName = (left.object as t.Identifier).name
 
@@ -94,7 +104,14 @@ export function saveObjects(ast: t.Node) {
         const binding = path.scope.getBinding(objectName)
 
         // 判断 原 object 是否为 var e = {}
-        if (!(binding && binding.path.node.type === 'VariableDeclarator' && binding.path.node.init?.type === 'ObjectExpression')) return
+        if (
+          !(
+            binding &&
+            binding.path.node.type === 'VariableDeclarator' &&
+            binding.path.node.init?.type === 'ObjectExpression'
+          )
+        )
+          return
         if (!binding.constant && binding.constantViolations.length === 0) return
 
         // 同时判断对象初始化的成员长度(避免不必要的替换),一般为空 {}
@@ -113,7 +130,9 @@ export function saveObjects(ast: t.Node) {
         try {
           const prop = t.objectProperty(left.property, right)
           if (objects[`${start}_${objectName}`]) {
-            const keyIndex = objects[`${start}_${objectName}`].properties.findIndex((p) => {
+            const keyIndex = objects[
+              `${start}_${objectName}`
+            ].properties.findIndex((p) => {
               if (p.type === 'ObjectProperty') {
                 const propName = getPropName(left.property)
                 const keyName = getPropName(p.key)
@@ -124,19 +143,19 @@ export function saveObjects(ast: t.Node) {
             })
             if (keyIndex !== -1)
               objects[`${start}_${objectName}`].properties[keyIndex] = prop
-
-            else
-              objects[`${start}_${objectName}`].properties.push(prop)
+            else objects[`${start}_${objectName}`].properties.push(prop)
 
             isReplace = true
           }
-        }
-        catch (error) {
+        } catch (error) {
           throw new Error('生成表达式失败')
         }
 
         if (isReplace) {
-          if (path.parentPath.type === 'SequenceExpression' || path.parentPath.type === 'ExpressionStatement')
+          if (
+            path.parentPath.type === 'SequenceExpression' ||
+            path.parentPath.type === 'ExpressionStatement'
+          )
             path.remove() // 移除自身赋值语句
         }
 
