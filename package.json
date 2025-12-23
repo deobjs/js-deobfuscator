@@ -12,19 +12,15 @@
     "website:dev": "bun run -F website --elide-lines 0 dev",
     "website:build": "bun run -F website --elide-lines 0 build",
     "website:generate": "bun run -F website --elide-lines 0 generate",
-    "website:serve": "bun run -F website --elide-lines 0 serve",
-    "lint": "eslint './{packages,website,scripts,meta}/**/*.{js,ts,tsx,vue,md,json}'",
-    "format": "bunx oxfmt",
-    "release": "bumpp -r",
+    "lint": "oxlint",
+    "format": "oxfmt",
     "test": "vitest"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^1.1.2",
-    "bumpp": "^9.2.0",
     "deob": "workspace:*",
-    "eslint": "^8.53.0",
     "oxfmt": "^0.20.0",
-    "typescript": "^5.2.2",
+    "oxlint": "^1.35.0",
+    "typescript": "^5.9.3",
     "vitest": "^1.0.0"
   }
 }
