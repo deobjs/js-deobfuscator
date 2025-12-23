@@ -9,6 +9,7 @@
     "website:generate": "bun run -F website --elide-lines 0 generate",
     "website:serve": "bun run -F website --elide-lines 0 serve",
     "lint": "eslint './{packages,website,scripts,meta}/**/*.{js,ts,tsx,vue,md,json}'",
+    "format": "bunx oxfmt",
     "release": "bumpp -r",
     "test": "vitest"
   },
