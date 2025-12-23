@@ -4,10 +4,10 @@
   "version": "0.3.0",
   "license": "MIT",
   "scripts": {
-    "website:dev": "pnpm run -F website dev",
-    "website:build": "pnpm run -F website build",
-    "website:generate": "pnpm run -F website generate",
-    "website:serve": "pnpm run -F website serve",
+    "website:dev": "bun run -F website --elide-lines 0 dev",
+    "website:build": "bun run -F website --elide-lines 0 build",
+    "website:generate": "bun run -F website --elide-lines 0 generate",
+    "website:serve": "bun run -F website --elide-lines 0 serve",
     "lint": "eslint './{packages,website,scripts,meta}/**/*.{js,ts,tsx,vue,md,json}'",
     "release": "bumpp -r",
     "test": "vitest"

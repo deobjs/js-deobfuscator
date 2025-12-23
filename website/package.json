@@ -24,12 +24,13 @@
     "@nuxt/devtools": "latest",
     "@types/json-to-ast": "^2.1.4",
     "@types/splitpanes": "^2.2.5",
-    "@unocss/nuxt": "^0.57.7",
-    "@unocss/transformer-variant-group": "^0.57.7",
-    "@vueuse/nuxt": "^10.11.1",
-    "nuxt": "^3.20.2",
+    "@unocss/nuxt": "^66.5.10",
+    "@unocss/transformer-variant-group": "^66.5.10",
+    "@vueuse/nuxt": "^14.1.0",
+    "nuxt": "^4.2.2",
     "nuxt-monaco-editor": "^1.4.0",
-    "vite-plugin-node-polyfills": "^0.24.0",
+    "unocss": "^66.5.10",
+    "vite-plugin-node-polyfills": "^0.16.0",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4"
   }
