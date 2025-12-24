@@ -1,6 +1,5 @@
 {
-  "name": "js-de-obfuscator",
-  "version": "0.3.0",
+  "private": true,
   "license": "MIT",
   "workspaces": [
     "packages/*",
