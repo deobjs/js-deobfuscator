@@ -1,36 +1,36 @@
-import type * as Babel from '@babel/parser'
+import type * as Babel from '@babel/parser';
 
-import type { JsonNode, Range } from '#imports'
+import type { JsonNode, Range } from '#imports';
 
 export interface Parser<C = unknown, O = unknown> {
-  id: string
-  label: string
-  icon: string
-  init?(): C | Promise<C>
-  version: string | ((this: C | Promise<C>) => string | Promise<string>)
-  parse(this: C, code: string, options: O): unknown
+  id: string;
+  label: string;
+  icon: string;
+  init?(): C | Promise<C>;
+  version: string | ((this: C | Promise<C>) => string | Promise<string>);
+  parse(this: C, code: string, options: O): unknown;
   options: {
-    configurable: boolean
+    configurable: boolean;
   } & (
     | {
-        defaultValue: string
-        defaultValueType: 'javascript'
+        defaultValue: string;
+        defaultValueType: 'javascript';
       }
     | {
-        defaultValue: O
-        defaultValueType?: 'json5'
+        defaultValue: O;
+        defaultValueType?: 'json5';
       }
-  )
-  getAstLocation?(ast: JsonNode): Range | undefined
+  );
+  getAstLocation?(ast: JsonNode): Range | undefined;
 }
 
 export interface LanguageOption {
-  label: string
-  icon: string
-  parsers: Parser<any, any>[]
+  label: string;
+  icon: string;
+  parsers: Parser<any, any>[];
 }
 
-export const parserVersion = ref('')
+export const parserVersion = ref('');
 
 const astLocationFields = {
   babel: {
@@ -48,23 +48,23 @@ const astLocationFields = {
     start: ['span', 'start'],
     end: ['span', 'end'],
   },
-} as const
+} as const;
 
 export function getAstLocation(
   preset: keyof typeof astLocationFields,
   node: JsonNode,
 ) {
-  if (node.type !== 'Object') return
-  if (!getJsonValue(node, astLocationFields[preset].type)) return
+  if (node.type !== 'Object') return;
+  if (!getJsonValue(node, astLocationFields[preset].type)) return;
 
-  const start = getJsonValue(node, astLocationFields[preset].start)
-  const end = getJsonValue(node, astLocationFields[preset].end)
-  if (typeof start !== 'number' || typeof end !== 'number') return
+  const start = getJsonValue(node, astLocationFields[preset].start);
+  const end = getJsonValue(node, astLocationFields[preset].end);
+  if (typeof start !== 'number' || typeof end !== 'number') return;
 
-  return { start, end }
+  return { start, end };
 }
 
-const getAstLocationBabel = getAstLocation.bind(null, 'babel')
+const getAstLocationBabel = getAstLocation.bind(null, 'babel');
 
 const babel: Parser<typeof Babel, Babel.ParserOptions> = {
   id: 'babel',
@@ -85,15 +85,15 @@ const babel: Parser<typeof Babel, Babel.ParserOptions> = {
       .then((r) => r.json())
       .then((raw) => `@babel/parser@${raw.version}`),
   parse(code, options) {
-    return this.parse(code, { ...options })
+    return this.parse(code, { ...options });
   },
 
   getAstLocation: getAstLocationBabel,
-}
+};
 
 export const javascript: LanguageOption = {
   label: 'JavaScript',
   icon: 'i-vscode-icons:file-type-js-official',
   parsers: [babel],
-}
-export const currentParser = computed(() => javascript.parsers[0])
+};
+export const currentParser = computed(() => javascript.parsers[0]);

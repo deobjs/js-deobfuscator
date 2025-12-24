@@ -1,6 +1,6 @@
-import * as t from '@babel/types'
-import * as m from '@codemod/matchers'
-import type { Transform } from '../../ast-utils'
+import * as t from '@babel/types';
+import * as m from '@codemod/matchers';
+import type { Transform } from '../../ast-utils';
 
 // https://eslint.org/docs/latest/rules/yoda and https://babeljs.io/docs/en/babel-plugin-minify-flip-comparisons
 
@@ -17,7 +17,7 @@ const flippedOperators = {
   '^': '^',
   '&': '&',
   '|': '|',
-} as const
+} as const;
 
 export default {
   name: 'yoda',
@@ -39,19 +39,19 @@ export default {
         m.identifier('Infinity'),
       ),
       m.matcher((node) => !t.isLiteral(node)),
-    )
+    );
 
     return {
       BinaryExpression: {
         exit({ node }) {
           if (matcher.match(node)) {
-            ;[node.left, node.right] = [node.right, node.left as t.Expression]
+            [node.left, node.right] = [node.right, node.left as t.Expression];
             node.operator =
-              flippedOperators[node.operator as keyof typeof flippedOperators]
-            this.changes++
+              flippedOperators[node.operator as keyof typeof flippedOperators];
+            this.changes++;
           }
         },
       },
-    }
+    };
   },
-} satisfies Transform
+} satisfies Transform;

@@ -1,7 +1,7 @@
-import * as t from '@babel/types'
-import * as m from '@codemod/matchers'
-import type { Transform } from '../../ast-utils'
-import { constMemberExpression } from '../../ast-utils'
+import * as t from '@babel/types';
+import * as m from '@codemod/matchers';
+import type { Transform } from '../../ast-utils';
+import { constMemberExpression } from '../../ast-utils';
 
 // https://github.com/babel/babel/pull/5791
 // https://github.com/babel/babel/blob/cce807f1eb638ee3030112dc190cbee032760888/packages/babel-plugin-transform-template-literals/src/index.ts
@@ -14,18 +14,18 @@ function escape(str: string) {
     .replace(/`/g, '\\`')
     .replace(/\${/g, '\\${')
     .replace(/\t/g, '\\t')
-    .replace(/\r/g, '\\r')
+    .replace(/\r/g, '\\r');
 }
 
 function flattenConcats(node: t.CallExpression) {
-  const parts: t.Expression[] = []
-  let current: t.Expression = node
+  const parts: t.Expression[] = [];
+  let current: t.Expression = node;
   while (current.type === 'CallExpression') {
-    parts.unshift(...(current.arguments as t.Expression[]))
-    current = (current.callee as t.MemberExpression).object
+    parts.unshift(...(current.arguments as t.Expression[]));
+    current = (current.callee as t.MemberExpression).object;
   }
-  parts.unshift(current)
-  return parts
+  parts.unshift(current);
+  return parts;
 }
 
 export default {
@@ -43,18 +43,18 @@ export default {
         ),
         m.arrayOf(m.anyExpression()),
       ),
-    )
+    );
 
     return {
       StringLiteral(path) {
         // Heuristic: source code most likely used a template literal if it contains multiple lines
-        if (!/\n.*?\n/.test(path.node.value)) return
-        if (concatMatcher.match(path.parentPath.parent)) return
+        if (!/\n.*?\n/.test(path.node.value)) return;
+        if (concatMatcher.match(path.parentPath.parent)) return;
 
-        const raw = escape(path.node.value)
-        const quasi = t.templateElement({ raw })
-        path.replaceWith(t.templateLiteral([quasi], []))
-        this.changes++
+        const raw = escape(path.node.value);
+        const quasi = t.templateElement({ raw });
+        path.replaceWith(t.templateLiteral([quasi], []));
+        this.changes++;
       },
       CallExpression: {
         exit(path) {
@@ -62,35 +62,35 @@ export default {
             concatMatcher.match(path.node) &&
             !concatMatcher.match(path.parentPath.parent)
           ) {
-            const parts = flattenConcats(path.node)
-            const quasis: t.TemplateElement[] = []
-            const expressions: t.Expression[] = []
+            const parts = flattenConcats(path.node);
+            const quasis: t.TemplateElement[] = [];
+            const expressions: t.Expression[] = [];
 
             for (let i = 0; i < parts.length; i++) {
-              const part = parts[i]
-              const nextPart = parts[i + 1]
-              const followedByString = nextPart?.type === 'StringLiteral'
+              const part = parts[i];
+              const nextPart = parts[i + 1];
+              const followedByString = nextPart?.type === 'StringLiteral';
 
               if (part.type === 'StringLiteral') {
                 if (followedByString) {
-                  nextPart.value = part.value + nextPart.value
+                  nextPart.value = part.value + nextPart.value;
                 } else {
-                  quasis.push(t.templateElement({ raw: escape(part.value) }))
+                  quasis.push(t.templateElement({ raw: escape(part.value) }));
                 }
               } else {
-                expressions.push(part)
+                expressions.push(part);
                 if (!followedByString) {
-                  quasis.push(t.templateElement({ raw: '' }))
+                  quasis.push(t.templateElement({ raw: '' }));
                 }
               }
             }
 
-            const template = t.templateLiteral(quasis, expressions)
-            path.replaceWith(template)
-            this.changes++
+            const template = t.templateLiteral(quasis, expressions);
+            path.replaceWith(template);
+            this.changes++;
           }
         },
       },
-    }
+    };
   },
-} satisfies Transform
+} satisfies Transform;

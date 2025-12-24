@@ -1,5 +1,5 @@
-import * as t from '@babel/types'
-import { Transform } from '../../ast-utils'
+import * as t from '@babel/types';
+import { Transform } from '../../ast-utils';
 
 export default {
   name: 'split-variable-declarations',
@@ -15,9 +15,9 @@ export default {
                 path.node.declarations.map((declaration) =>
                   t.variableDeclaration(path.node.kind, [declaration]),
                 ),
-              )
-              path.remove()
-              this.changes++
+              );
+              path.remove();
+              this.changes++;
             }
           } else {
             if (path.parentPath.isExportNamedDeclaration()) {
@@ -27,18 +27,18 @@ export default {
                     t.variableDeclaration(path.node.kind, [declaration]),
                   ),
                 ),
-              )
+              );
             } else {
               path.replaceWithMultiple(
                 path.node.declarations.map((declaration) =>
                   t.variableDeclaration(path.node.kind, [declaration]),
                 ),
-              )
+              );
             }
-            this.changes++
+            this.changes++;
           }
         }
       },
     },
   }),
-} satisfies Transform
+} satisfies Transform;

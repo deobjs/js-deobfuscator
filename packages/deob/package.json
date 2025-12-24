@@ -10,12 +10,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "node esbuild.config.js && tsc -p tsconfig.build.json",
-    "watch": "node esbuild.config.js --watch",
-    "start": "node dist/cli.js",
-    "tmp": "node esbuild.config.js && node --enable-source-maps dist/cli.js tmp/input.js -f -o tmp/out",
-    "lint": "eslint src test",
-    "lint:fix": "eslint src test --fix",
+    "build": "bun esbuild.config.js && tsc -p tsconfig.build.json",
+    "watch": "bun esbuild.config.js --watch",
+    "start": "bun dist/cli.js",
     "test": "vitest --pool=vmThreads"
   },
   "dependencies": {

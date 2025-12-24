@@ -1,8 +1,8 @@
-import { test } from 'vitest'
-import { testTransform } from '../../../test'
-import { logicalToIf } from '../transforms'
+import { test } from 'vitest';
+import { testTransform } from '../../../test';
+import { logicalToIf } from '../transforms';
 
-const expectJS = testTransform(logicalToIf)
+const expectJS = testTransform(logicalToIf);
 
 test('and', () =>
   expectJS(`
@@ -11,7 +11,7 @@ test('and', () =>
     if (x && y) {
       z();
     }
-  `))
+  `));
 
 test('or', () =>
   expectJS(`
@@ -20,4 +20,4 @@ test('or', () =>
     if (!(x || y)) {
       z();
     }
-  `))
+  `));

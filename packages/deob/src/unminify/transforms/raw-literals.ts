@@ -1,4 +1,4 @@
-import type { Transform } from '../../ast-utils'
+import type { Transform } from '../../ast-utils';
 
 export default {
   name: 'raw-literals',
@@ -6,15 +6,15 @@ export default {
   visitor: () => ({
     StringLiteral(path) {
       if (path.node.extra) {
-        path.node.extra = undefined
-        this.changes++
+        path.node.extra = undefined;
+        this.changes++;
       }
     },
     NumericLiteral(path) {
       if (path.node.extra) {
-        path.node.extra = undefined
-        this.changes++
+        path.node.extra = undefined;
+        this.changes++;
       }
     },
   }),
-} satisfies Transform
+} satisfies Transform;

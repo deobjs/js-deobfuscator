@@ -1,9 +1,9 @@
-import { describe, expect, it } from 'vitest'
-import { parse } from '@babel/parser'
-import { findDecoderByCallCount } from '../find-decoder-by-call-count'
-import { findDecoderByArray } from '../find-decoder-by-array'
-import { evalCode, generate } from '../..'
-import { decodeStrings } from '../decode-strings'
+import { describe, expect, it } from 'vitest';
+import { parse } from '@babel/parser';
+import { findDecoderByCallCount } from '../find-decoder-by-call-count';
+import { findDecoderByArray } from '../find-decoder-by-array';
+import { evalCode, generate } from '../..';
+import { decodeStrings } from '../decode-strings';
 
 describe('decoder', async () => {
   it('find decoder by call count', () => {
@@ -14,21 +14,21 @@ describe('decoder', async () => {
   
       decoder("SGVsbG8sIHdvcmxk")
       decoder("ZGVidWdnZXI=")
-      `)
+      `);
 
-    const { decoders, setupCode } = findDecoderByCallCount(ast, 2)
+    const { decoders, setupCode } = findDecoderByCallCount(ast, 2);
 
-    evalCode(setupCode)
-    decodeStrings(decoders)
+    evalCode(setupCode);
+    decodeStrings(decoders);
 
-    decoders.forEach((d) => d.path.remove())
+    decoders.forEach((d) => d.path.remove());
 
-    expect(decoders[0].name).toBe('decoder')
+    expect(decoders[0].name).toBe('decoder');
     expect(generate(ast)).toMatchInlineSnapshot(`
       ""Hello, world";
       "debugger";"
-    `)
-  })
+    `);
+  });
   it('find decoder by array', () => {
     const ast = parse(`
       var arr = ["hello,world", "debugger"]
@@ -38,21 +38,21 @@ describe('decoder', async () => {
   
       decoder(0)
       decoder(1)
-      `)
+      `);
 
-    const { stringArray, decoders, setupCode } = findDecoderByArray(ast, 2)
+    const { stringArray, decoders, setupCode } = findDecoderByArray(ast, 2);
 
-    evalCode(setupCode)
-    decodeStrings(decoders)
+    evalCode(setupCode);
+    decodeStrings(decoders);
 
-    stringArray?.path.remove()
-    decoders.forEach((d) => d.path.remove())
-    expect(stringArray!.name).toBe('arr')
-    expect(decoders[0].name).toBe('decoder')
+    stringArray?.path.remove();
+    decoders.forEach((d) => d.path.remove());
+    expect(stringArray!.name).toBe('arr');
+    expect(decoders[0].name).toBe('decoder');
 
     expect(generate(ast)).toMatchInlineSnapshot(`
       ""hello,world";
       "debugger";"
-    `)
-  })
-})
+    `);
+  });
+});

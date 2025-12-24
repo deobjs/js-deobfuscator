@@ -1,10 +1,10 @@
-import { NodePath } from '@babel/traverse'
-import * as t from '@babel/types'
+import { NodePath } from '@babel/traverse';
+import * as t from '@babel/types';
 import {
   Transform,
   inlineFunctionAliases,
   inlineVariableAliases,
-} from '../ast-utils'
+} from '../ast-utils';
 
 /**
  * Replaces all references to `var alias = decode;` with `decode`
@@ -14,13 +14,13 @@ export default {
   tags: ['unsafe'],
   scope: true,
   run(ast, state, decoder) {
-    if (!decoder?.node.id) return
+    if (!decoder?.node.id) return;
 
-    const decoderName = decoder.node.id.name
-    const decoderBinding = decoder.parentPath.scope.getBinding(decoderName)
+    const decoderName = decoder.node.id.name;
+    const decoderBinding = decoder.parentPath.scope.getBinding(decoderName);
     if (decoderBinding) {
-      state.changes += inlineVariableAliases(decoderBinding).changes
-      state.changes += inlineFunctionAliases(decoderBinding).changes
+      state.changes += inlineVariableAliases(decoderBinding).changes;
+      state.changes += inlineFunctionAliases(decoderBinding).changes;
     }
   },
-} satisfies Transform<NodePath<t.FunctionDeclaration>>
+} satisfies Transform<NodePath<t.FunctionDeclaration>>;

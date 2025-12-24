@@ -1,14 +1,6 @@
 {
-  "arrowParens": "always",
   "printWidth": 80,
   "proseWrap": "never",
   "singleQuote": true,
-  "trailingComma": "all",
-  "semi": false,
-  "ignorePatterns": [
-    "code.js",
-    "**/code_*.js",
-    "example/**",
-    "website/.output/**"
-  ]
+  "ignorePatterns": ["example/**", "website/.output/**"]
 }

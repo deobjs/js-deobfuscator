@@ -1,8 +1,8 @@
-import { test } from 'vitest'
-import { testTransform } from '../../../test'
-import { blockStatements } from '../transforms'
+import { test } from 'vitest';
+import { testTransform } from '../../../test';
+import { blockStatements } from '../transforms';
 
-const expectJS = testTransform(blockStatements)
+const expectJS = testTransform(blockStatements);
 
 test('if statement', () =>
   expectJS(`
@@ -11,7 +11,7 @@ test('if statement', () =>
     if (a) {
       b();
     }
-  `))
+  `));
 
 test('while statement', () =>
   expectJS(`
@@ -20,7 +20,7 @@ test('while statement', () =>
     while (a) {
       b();
     }
-  `))
+  `));
 
 test('for statement', () =>
   expectJS(`
@@ -29,7 +29,7 @@ test('for statement', () =>
     for (;;) {
       b();
     }
-  `))
+  `));
 
 test('for-in statement', () =>
   expectJS(`
@@ -38,7 +38,7 @@ test('for-in statement', () =>
     for (const key in object) {
       b();
     }
-  `))
+  `));
 
 test('for-of statement', () =>
   expectJS(`
@@ -47,7 +47,7 @@ test('for-of statement', () =>
     for (const item of array) {
       b();
     }
-  `))
+  `));
 
 test('arrow function', () =>
   expectJS(`
@@ -56,11 +56,11 @@ test('arrow function', () =>
     const x = () => {
       return a(), b();
     };
-  `))
+  `));
 
 test('ignore empty statement', () =>
   expectJS(`
     while (arr.pop());
   `).toMatchInlineSnapshot(`
     while (arr.pop());
-  `))
+  `));

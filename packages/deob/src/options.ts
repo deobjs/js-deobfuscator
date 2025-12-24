@@ -1,36 +1,40 @@
 export interface Options {
   /** 是否强力清除 */
-  isStrongRemove?: boolean
+  isStrongRemove?: boolean;
 
   /** 解密器嵌套深度 */
-  inlineWrappersDepth?: number
+  inlineWrappersDepth?: number;
   /** 解密器定位方式 */
-  decoderLocationMethod?: 'obfuscate' | 'callCount' | 'stringArray' | 'evalCode'
+  decoderLocationMethod?:
+    | 'obfuscate'
+    | 'callCount'
+    | 'stringArray'
+    | 'evalCode';
   /** 解密器调用次数 */
-  decoderCallCount?: number
+  decoderCallCount?: number;
   /** 字符串数组长度 */
-  stringArraylength?: number
+  stringArraylength?: number;
   /** 执行代码函数 */
-  setupCode?: string
+  setupCode?: string;
   /** 指明解密函数 */
-  designDecoderName?: string | string[]
+  designDecoderName?: string | string[];
   /** 是否移除解密器代码 */
-  isRemoveDecoder?: boolean
+  isRemoveDecoder?: boolean;
   /** 混淆花指令执行次数 */
-  execCount?: number
+  execCount?: number;
 
   /** 是否标记关键信息 */
-  isMarkEnable?: boolean
+  isMarkEnable?: boolean;
   /** 关键标识符 */
-  keywords?: string[]
+  keywords?: string[];
   /** 是否调试模式，将会日志输出与文件输出 */
-  isDebug?: boolean
+  isDebug?: boolean;
   /** 优化变量名 */
-  mangle?: boolean
+  mangle?: boolean;
   // /** 优化对象访问方式 */
   // computedProp?: boolean
   /** 压缩代码 */
-  isMinifiedEnable?: boolean
+  isMinifiedEnable?: boolean;
 }
 
 export const defaultOptions: Required<Options> = {
@@ -53,7 +57,7 @@ export const defaultOptions: Required<Options> = {
   mangle: false,
   // computedProp: false,
   isMinifiedEnable: false,
-}
+};
 
 export function mergeOptions(
   options: Options,
@@ -61,6 +65,6 @@ export function mergeOptions(
   const mergedOptions: Required<Options> = {
     ...defaultOptions,
     ...options,
-  }
-  Object.assign(options, mergedOptions)
+  };
+  Object.assign(options, mergedOptions);
 }

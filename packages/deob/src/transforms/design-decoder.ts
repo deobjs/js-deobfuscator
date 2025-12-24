@@ -1,6 +1,6 @@
-import traverse from '@babel/traverse'
-import type * as t from '@babel/types'
-import { Decoder } from '../deobfuscate/decoder'
+import traverse from '@babel/traverse';
+import type * as t from '@babel/types';
+import { Decoder } from '../deobfuscate/decoder';
 
 export function designDecoder(
   ast: t.Node,
@@ -8,20 +8,20 @@ export function designDecoder(
 ): Decoder[] {
   const decoderNameList = Array.isArray(decoderName)
     ? decoderName
-    : [decoderName]
+    : [decoderName];
 
-  const decoders: Decoder[] = []
+  const decoders: Decoder[] = [];
 
   traverse(ast, {
     FunctionDeclaration(path) {
-      const { id } = path.node
-      const name = id?.name
+      const { id } = path.node;
+      const name = id?.name;
 
       if (name && decoderNameList.includes(name)) {
-        decoders.push(new Decoder(name, path))
+        decoders.push(new Decoder(name, path));
       }
     },
-  })
+  });
 
   // // 将所有引用解密函数的变量都重命名变为解密函数, 同时移除自身
   // traverse(ast, {
@@ -39,5 +39,5 @@ export function designDecoder(
   //   },
   // })
 
-  return decoders
+  return decoders;
 }

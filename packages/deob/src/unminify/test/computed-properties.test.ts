@@ -1,14 +1,14 @@
-import { test } from 'vitest'
-import { testTransform } from '../../../test'
-import { computedProperties } from '../transforms'
+import { test } from 'vitest';
+import { testTransform } from '../../../test';
+import { computedProperties } from '../transforms';
 
-const expectJS = testTransform(computedProperties)
+const expectJS = testTransform(computedProperties);
 
 test('member expression', () => {
   expectJS(`
     require("foo")["default"]?.["_"];
-  `).toMatchInlineSnapshot('require("foo").default?._;')
-})
+  `).toMatchInlineSnapshot('require("foo").default?._;');
+});
 
 test('object', () => {
   expectJS(`
@@ -18,8 +18,8 @@ test('object', () => {
       foo() {},
       bar: 1
     };
-  `)
-})
+  `);
+});
 
 test('class', () => {
   expectJS(`
@@ -32,13 +32,13 @@ test('class', () => {
       foo() {}
       bar = 1;
     }
-  `)
-})
+  `);
+});
 
 test('ignore invalid identifier', () =>
   expectJS(`
     console["1"]("hello");
-  `).toMatchInlineSnapshot('console["1"]("hello");'))
+  `).toMatchInlineSnapshot('console["1"]("hello");'));
 
 test('ignore __proto__ property', () =>
   expectJS(`
@@ -47,7 +47,7 @@ test('ignore __proto__ property', () =>
     const x = {
       ["__proto__"]: 1
     };
-  `))
+  `));
 
 test('ignore constructor method', () =>
   expectJS(`
@@ -58,4 +58,4 @@ test('ignore constructor method', () =>
     class Foo {
       ["constructor"]() {}
     }
-  `))
+  `));

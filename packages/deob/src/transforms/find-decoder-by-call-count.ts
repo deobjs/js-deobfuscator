@@ -1,8 +1,8 @@
-import * as parser from '@babel/parser'
-import type * as t from '@babel/types'
-import traverse from '@babel/traverse'
-import { generate } from '../ast-utils'
-import { Decoder } from '../deobfuscate/decoder'
+import * as parser from '@babel/parser';
+import type * as t from '@babel/types';
+import traverse from '@babel/traverse';
+import { generate } from '../ast-utils';
+import { Decoder } from '../deobfuscate/decoder';
 
 /**
  * 根据解密器调用次数寻找到解密器
@@ -10,30 +10,30 @@ import { Decoder } from '../deobfuscate/decoder'
  * @returns {string} 解密器代码
  */
 export function findDecoderByCallCount(ast: t.File, count = 100) {
-  let index = 0 // 最后一个解密函数所在语句下标
+  let index = 0; // 最后一个解密函数所在语句下标
 
-  const decoders: Decoder[] = []
+  const decoders: Decoder[] = [];
 
   traverse(ast, {
     FunctionDeclaration(path) {
       if (path.parentPath.isProgram()) {
-        const fnName = path.node.id!.name
+        const fnName = path.node.id!.name;
 
-        const binding = path.scope.getBinding(fnName)
+        const binding = path.scope.getBinding(fnName);
 
-        if (!binding) return
+        if (!binding) return;
 
         // 引用次数
         if (binding.referencePaths.length >= count) {
-          decoders.push(new Decoder(fnName, path))
+          decoders.push(new Decoder(fnName, path));
 
-          const body = (path.parentPath!.scope.block as t.Program).body
+          const body = (path.parentPath!.scope.block as t.Program).body;
 
           // TODO: 根据解密器来找乱序函数与字符串数组
           for (let i = 0; i < body.length; i++) {
-            const statement = body[i]
+            const statement = body[i];
             if (statement.start === path.node.start) {
-              index = i + 1
+              index = i + 1;
             }
           }
         }
@@ -47,16 +47,16 @@ export function findDecoderByCallCount(ast: t.File, count = 100) {
     //       processFunction(path)
     //   }
     // },
-  })
+  });
 
   const generateOptions = {
     compact: true,
     shouldPrintComment: () => false,
-  }
+  };
 
-  const newAst = parser.parse('')
-  newAst.program.body = ast.program.body.slice(0, index)
-  const setupCode = generate(newAst, generateOptions)
+  const newAst = parser.parse('');
+  newAst.program.body = ast.program.body.slice(0, index);
+  const setupCode = generate(newAst, generateOptions);
 
   // TODO:
   // stringArray rotators
@@ -64,5 +64,5 @@ export function findDecoderByCallCount(ast: t.File, count = 100) {
   return {
     setupCode,
     decoders,
-  }
+  };
 }

@@ -1,7 +1,7 @@
-import type { NodePath } from '@babel/traverse'
-import type * as t from '@babel/types'
-import * as m from '@codemod/matchers'
-import type { Transform } from '../ast-utils'
+import type { NodePath } from '@babel/traverse';
+import type * as t from '@babel/types';
+import * as m from '@codemod/matchers';
+import type { Transform } from '../ast-utils';
 import {
   constMemberExpression,
   emptyIife,
@@ -9,7 +9,7 @@ import {
   findParent,
   matchIife,
   trueMatcher,
-} from '../ast-utils'
+} from '../ast-utils';
 
 // SingleCallController: https://github.com/javascript-obfuscator/javascript-obfuscator/blob/d7f73935557b2cd15a2f7cd0b01017d9cddbd015/src/custom-code-helpers/common/templates/SingleCallControllerTemplate.ts
 
@@ -24,12 +24,12 @@ export default {
   tags: ['safe'],
   scope: true,
   visitor() {
-    const callController = m.capture(m.anyString())
-    const firstCall = m.capture(m.identifier())
-    const rfn = m.capture(m.identifier())
-    const context = m.capture(m.identifier())
-    const res = m.capture(m.identifier())
-    const fn = m.capture(m.identifier())
+    const callController = m.capture(m.anyString());
+    const firstCall = m.capture(m.identifier());
+    const rfn = m.capture(m.identifier());
+    const context = m.capture(m.identifier());
+    const res = m.capture(m.identifier());
+    const fn = m.capture(m.identifier());
 
     // const callControllerFunctionName = (function() { ... })();
     const matcher = m.variableDeclarator(
@@ -108,12 +108,12 @@ export default {
           ),
         ),
       ]),
-    )
+    );
 
     return {
       VariableDeclarator(path) {
-        if (!matcher.match(path.node)) return
-        const binding = path.scope.getBinding(callController.current!)!
+        if (!matcher.match(path.node)) return;
+        const binding = path.scope.getBinding(callController.current!)!;
         // const callControllerFunctionName = (function() { ... })();
         //       ^ path/binding
 
@@ -123,44 +123,44 @@ export default {
             if (ref.parentPath?.parent.type === 'CallExpression') {
               // callControllerFunctionName(this, function () { ... })();
               // ^ ref
-              ref.parentPath.parentPath?.remove()
+              ref.parentPath.parentPath?.remove();
             } else {
               // const selfDefendingFunctionName = callControllerFunctionName(this, function () {
               // selfDefendingFunctionName();      ^ ref
-              removeSelfDefendingRefs(ref as NodePath<t.Identifier>)
+              removeSelfDefendingRefs(ref as NodePath<t.Identifier>);
             }
 
             // leftover (function () {})() from debug protection function call
-            findParent(ref, emptyIife)?.remove()
+            findParent(ref, emptyIife)?.remove();
 
-            this.changes++
-          })
+            this.changes++;
+          });
 
-        path.remove()
-        this.changes++
+        path.remove();
+        this.changes++;
       },
-    }
+    };
   },
-} satisfies Transform
+} satisfies Transform;
 
 function removeSelfDefendingRefs(path: NodePath<t.Identifier>) {
-  const varName = m.capture(m.anyString())
+  const varName = m.capture(m.anyString());
   const varMatcher = m.variableDeclarator(
     m.identifier(varName),
     m.callExpression(m.identifier(path.node.name)),
-  )
+  );
   const callMatcher = m.expressionStatement(
     m.callExpression(m.identifier(m.fromCapture(varName)), []),
-  )
-  const varDecl = findParent(path, varMatcher)
+  );
+  const varDecl = findParent(path, varMatcher);
 
   if (varDecl) {
-    const binding = varDecl.scope.getBinding(varName.current!)
+    const binding = varDecl.scope.getBinding(varName.current!);
 
     binding?.referencePaths.forEach((ref) => {
       if (callMatcher.match(ref.parentPath?.parent))
-        ref.parentPath?.parentPath?.remove()
-    })
-    varDecl.remove()
+        ref.parentPath?.parentPath?.remove();
+    });
+    varDecl.remove();
   }
 }

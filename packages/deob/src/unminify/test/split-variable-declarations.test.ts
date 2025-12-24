@@ -1,8 +1,8 @@
-import { test } from 'vitest'
-import { testTransform } from '../../../test'
-import { splitVariableDeclarations } from '../transforms'
+import { test } from 'vitest';
+import { testTransform } from '../../../test';
+import { splitVariableDeclarations } from '../transforms';
 
-const expectJS = testTransform(splitVariableDeclarations)
+const expectJS = testTransform(splitVariableDeclarations);
 
 test('split variable declarations', () =>
   expectJS(`
@@ -11,7 +11,7 @@ test('split variable declarations', () =>
     const a = 1;
     const b = 2;
     const c = 3;
-  `))
+  `));
 
 test('split exported variable declarations', () =>
   expectJS(`
@@ -20,7 +20,7 @@ test('split exported variable declarations', () =>
     export const a = 1;
     export const b = 2;
     export const c = 3;
-  `))
+  `));
 
 test('dont split in for loop', () =>
   expectJS(`
@@ -30,4 +30,4 @@ test('dont split in for loop', () =>
       var a;
       var b;
     }
-  `))
+  `));

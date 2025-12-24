@@ -1,8 +1,8 @@
-import { test } from 'vitest'
-import { testTransform } from '../../../test'
-import mergeObjectAssignments from '../merge-object-assignments'
+import { test } from 'vitest';
+import { testTransform } from '../../../test';
+import mergeObjectAssignments from '../merge-object-assignments';
 
-const expectJS = testTransform(mergeObjectAssignments)
+const expectJS = testTransform(mergeObjectAssignments);
 
 test('inline properties without inlining object', () =>
   expectJS(`
@@ -18,7 +18,7 @@ test('inline properties without inlining object', () =>
     };
     foo++;
     return obj;
-  `))
+  `));
 
 test('inline properties and object', () =>
   expectJS(`
@@ -29,7 +29,7 @@ test('inline properties and object', () =>
     return {
       foo: 'foo'
     };
-  `))
+  `));
 
 test('computed properties', () =>
   expectJS(`
@@ -42,7 +42,7 @@ test('computed properties', () =>
       "a b c": 1,
       1: 2
     };
-  `))
+  `));
 
 test('ignore circular reference', () =>
   expectJS(`
@@ -51,7 +51,7 @@ test('ignore circular reference', () =>
   `).toMatchInlineSnapshot(`
     const obj = {};
     obj.foo = obj;
-  `))
+  `));
 
 test('ignore call with possible circular reference', () =>
   expectJS(`
@@ -60,4 +60,4 @@ test('ignore call with possible circular reference', () =>
   `).toMatchInlineSnapshot(`
     const obj = {};
     obj.foo = fn();
-  `))
+  `));

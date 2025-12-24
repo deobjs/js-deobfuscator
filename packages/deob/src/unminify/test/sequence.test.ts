@@ -1,8 +1,8 @@
-import { test } from 'vitest'
-import { testTransform } from '../../../test'
-import { sequence } from '../transforms'
+import { test } from 'vitest';
+import { testTransform } from '../../../test';
+import { sequence } from '../transforms';
 
-const expectJS = testTransform(sequence)
+const expectJS = testTransform(sequence);
 
 test('to statements', () =>
   expectJS(`
@@ -12,7 +12,7 @@ test('to statements', () =>
       b();
       c();
     }
-  `))
+  `));
 
 test('rearrange from return', () =>
   expectJS(`
@@ -25,7 +25,7 @@ test('rearrange from return', () =>
       b();
       return c();
     }
-  `))
+  `));
 
 test('rearrange from if', () =>
   expectJS(`
@@ -33,7 +33,7 @@ test('rearrange from if', () =>
   `).toMatchInlineSnapshot(`
     a();
     if (b()) c();
-  `))
+  `));
 
 test('rearrange from switch', () =>
   expectJS(`
@@ -41,7 +41,7 @@ test('rearrange from switch', () =>
   `).toMatchInlineSnapshot(`
     a();
     switch (b()) {}
-  `))
+  `));
 
 test('throw', () =>
   expectJS(`
@@ -49,7 +49,7 @@ test('throw', () =>
   `).toMatchInlineSnapshot(`
     a();
     throw b();
-  `))
+  `));
 
 test('rearrange from for-in', () =>
   expectJS(`
@@ -57,7 +57,7 @@ test('rearrange from for-in', () =>
   `).toMatchInlineSnapshot(`
     a = 1;
     for (let key in object) {}
-  `))
+  `));
 
 test('rearrange from for loop init', () =>
   expectJS(`
@@ -66,7 +66,7 @@ test('rearrange from for loop init', () =>
     a();
     b();
     for (;;);
-  `))
+  `));
 
 test('rearrange from for loop update', () =>
   expectJS(`
@@ -76,7 +76,7 @@ test('rearrange from for loop update', () =>
       a();
       b();
     }
-  `))
+  `));
 
 test('rearrange variable declarator', () =>
   expectJS(`
@@ -84,7 +84,7 @@ test('rearrange variable declarator', () =>
   `).toMatchInlineSnapshot(`
     o = null;
     var t = o;
-  `))
+  `));
 
 test('rearrange assignment', () => {
   expectJS(`
@@ -92,7 +92,7 @@ test('rearrange assignment', () => {
   `).toMatchInlineSnapshot(`
     o = null;
     t = o;
-  `)
+  `);
 
   expectJS(`
     for (;;) a = (b, c);
@@ -101,8 +101,8 @@ test('rearrange assignment', () => {
       b;
       a = c;
     }
-  `)
-})
+  `);
+});
 
 test('dont rearrange variable declarator in for loop', () =>
   expectJS(`
@@ -110,4 +110,4 @@ test('dont rearrange variable declarator in for loop', () =>
   `).toMatchInlineSnapshot(`
     b;
     for (let a = c;;) {}
-  `))
+  `));

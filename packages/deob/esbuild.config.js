@@ -1,7 +1,7 @@
-import esbuild from 'esbuild'
+import esbuild from 'esbuild';
 
-const args = process.argv.slice(2)
-const watch = args.length > 0 && /^(?:--watch|-w)$/i.test(args[0])
+const args = process.argv.slice(2);
+const watch = args.length > 0 && /^(?:--watch|-w)$/i.test(args[0]);
 
 /**
  * Fixes https://github.com/babel/babel/issues/15269
@@ -14,8 +14,8 @@ const babelImportPlugin = {
       return {
         path: args.path,
         namespace: 'babel-import',
-      }
-    })
+      };
+    });
 
     build.onLoad({ filter: /.*/, namespace: 'babel-import' }, (args) => {
       return {
@@ -23,10 +23,10 @@ const babelImportPlugin = {
         contents: `import module from '${args.path}/lib/index.js';
           export default module.default ?? module;
           export * from '${args.path}/lib/index.js';`,
-      }
-    })
+      };
+    });
   },
-}
+};
 
 /**
  * @type {esbuild.BuildOptions[]}
@@ -39,7 +39,7 @@ const configs = [
     entryPoints: ['src/cli.ts'],
     bundle: false,
   },
-]
+];
 
 for (const config of configs) {
   const ctx = await esbuild.context({
@@ -52,12 +52,12 @@ for (const config of configs) {
     plugins: [babelImportPlugin],
     logLevel: 'info',
     ...config,
-  })
+  });
 
   if (watch) {
-    await ctx.watch()
+    await ctx.watch();
   } else {
-    await ctx.rebuild()
-    await ctx.dispose()
+    await ctx.rebuild();
+    await ctx.dispose();
   }
 }

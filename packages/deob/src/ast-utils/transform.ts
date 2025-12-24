@@ -1,8 +1,8 @@
-import type { Node, TraverseOptions, Visitor } from '@babel/traverse'
-import traverse, { visitors } from '@babel/traverse'
-import debug from 'debug'
+import type { Node, TraverseOptions, Visitor } from '@babel/traverse';
+import traverse, { visitors } from '@babel/traverse';
+import debug from 'debug';
 
-const logger = debug('webcrack:transforms')
+const logger = debug('webcrack:transforms');
 
 export async function applyTransformAsync<TOptions>(
   ast: Node,
@@ -10,14 +10,14 @@ export async function applyTransformAsync<TOptions>(
   options?: TOptions,
 ): Promise<TransformState> {
   // logger(`${transform.name}: started`)
-  const state: TransformState = { changes: 0 }
+  const state: TransformState = { changes: 0 };
 
-  await transform.run?.(ast, state, options)
+  await transform.run?.(ast, state, options);
   if (transform.visitor)
-    traverse(ast, transform.visitor(options), undefined, state)
+    traverse(ast, transform.visitor(options), undefined, state);
 
   // logger(`${transform.name}: finished with ${state.changes} changes`)
-  return state
+  return state;
 }
 
 export function applyTransform<TOptions>(
@@ -27,19 +27,19 @@ export function applyTransform<TOptions>(
   noScopeOverride?: boolean,
 ): TransformState {
   // logger(`${transform.name}: started`)
-  const state: TransformState = { changes: 0 }
-  transform.run?.(ast, state, options)
+  const state: TransformState = { changes: 0 };
+  transform.run?.(ast, state, options);
 
   if (transform.visitor) {
     const visitor = transform.visitor(
       options,
-    ) as TraverseOptions<TransformState>
-    visitor.noScope = noScopeOverride || !transform.scope
-    traverse(ast, visitor, undefined, state)
+    ) as TraverseOptions<TransformState>;
+    visitor.noScope = noScopeOverride || !transform.scope;
+    traverse(ast, visitor, undefined, state);
   }
 
   // logger(`${transform.name}: finished with ${state.changes} changes`)
-  return state
+  return state;
 }
 
 export function applyTransforms(
@@ -47,43 +47,43 @@ export function applyTransforms(
   transforms: Transform[],
   options: { noScope?: boolean; name?: string; log?: boolean } = {},
 ): TransformState {
-  options.log ??= true
-  const name = options.name ?? transforms.map((t) => t.name).join(', ')
-  if (options.log) logger(`${name}: started`)
-  const state: TransformState = { changes: 0 }
+  options.log ??= true;
+  const name = options.name ?? transforms.map((t) => t.name).join(', ');
+  if (options.log) logger(`${name}: started`);
+  const state: TransformState = { changes: 0 };
 
   for (const transform of transforms) {
-    transform.run?.(ast, state)
+    transform.run?.(ast, state);
   }
 
-  const traverseOptions = transforms.flatMap((t) => t.visitor?.() ?? [])
+  const traverseOptions = transforms.flatMap((t) => t.visitor?.() ?? []);
   if (traverseOptions.length > 0) {
     const visitor: TraverseOptions<TransformState> =
-      visitors.merge(traverseOptions)
-    visitor.noScope = options.noScope || transforms.every((t) => !t.scope)
-    traverse(ast, visitor, undefined, state)
+      visitors.merge(traverseOptions);
+    visitor.noScope = options.noScope || transforms.every((t) => !t.scope);
+    traverse(ast, visitor, undefined, state);
   }
 
-  if (options.log) logger(`${name}: finished with ${state.changes} changes`)
-  return state
+  if (options.log) logger(`${name}: finished with ${state.changes} changes`);
+  return state;
 }
 
 export interface TransformState {
-  changes: number
+  changes: number;
 }
 
 export interface Transform<TOptions = unknown> {
-  name: string
-  tags: Tag[]
-  scope?: boolean
-  run?: (ast: Node, state: TransformState, options?: TOptions) => void
-  visitor?: (options?: TOptions) => Visitor<TransformState>
+  name: string;
+  tags: Tag[];
+  scope?: boolean;
+  run?: (ast: Node, state: TransformState, options?: TOptions) => void;
+  visitor?: (options?: TOptions) => Visitor<TransformState>;
 }
 
 export interface AsyncTransform<
   TOptions = unknown,
 > extends Transform<TOptions> {
-  run?: (ast: Node, state: TransformState, options?: TOptions) => Promise<void>
+  run?: (ast: Node, state: TransformState, options?: TOptions) => Promise<void>;
 }
 
-export type Tag = 'safe' | 'unsafe'
+export type Tag = 'safe' | 'unsafe';

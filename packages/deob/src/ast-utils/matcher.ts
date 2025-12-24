@@ -1,12 +1,12 @@
-import { Binding, NodePath } from '@babel/traverse'
-import * as t from '@babel/types'
-import * as m from '@codemod/matchers'
+import { Binding, NodePath } from '@babel/traverse';
+import * as t from '@babel/types';
+import * as m from '@codemod/matchers';
 
 export const anyLiteral: m.Matcher<t.Literal> = m.matcher(
   (node) =>
     t.isLiteral(node) &&
     (!t.isTemplateLiteral(node) || node.expressions.length === 0),
-)
+);
 
 export function infiniteLoop(
   body?: m.Matcher<t.Statement>,
@@ -15,13 +15,13 @@ export function infiniteLoop(
     m.forStatement(undefined, null, undefined, body),
     m.forStatement(undefined, truthyMatcher, undefined, body),
     m.whileStatement(truthyMatcher, body),
-  )
+  );
 }
 
 export function constKey(
   name?: string | m.Matcher<string>,
 ): m.Matcher<t.Identifier | t.StringLiteral> {
-  return m.or(m.identifier(name), m.stringLiteral(name))
+  return m.or(m.identifier(name), m.stringLiteral(name));
 }
 
 export function constObjectProperty(
@@ -30,7 +30,7 @@ export function constObjectProperty(
   return m.or(
     m.objectProperty(m.identifier(), value, false),
     m.objectProperty(m.or(m.stringLiteral(), m.numericLiteral()), value),
-  )
+  );
 }
 
 export function matchIife(
@@ -39,11 +39,11 @@ export function matchIife(
   return m.callExpression(
     m.functionExpression(null, [], body ? m.blockStatement(body) : undefined),
     [],
-  )
+  );
 }
 
-export const iife = matchIife()
-export const emptyIife = matchIife([])
+export const iife = matchIife();
+export const emptyIife = matchIife([]);
 
 /**
  * Matches both identifier properties and string literal computed properties
@@ -52,11 +52,11 @@ export function constMemberExpression(
   object: string | m.Matcher<t.Expression>,
   property?: string | m.Matcher<string>,
 ): m.Matcher<t.MemberExpression> {
-  if (typeof object === 'string') object = m.identifier(object)
+  if (typeof object === 'string') object = m.identifier(object);
   return m.or(
     m.memberExpression(object, m.identifier(property), false),
     m.memberExpression(object, m.stringLiteral(property), true),
-  )
+  );
 }
 
 export const trueMatcher = m.or(
@@ -64,14 +64,14 @@ export const trueMatcher = m.or(
   m.unaryExpression('!', m.numericLiteral(0)),
   m.unaryExpression('!', m.unaryExpression('!', m.numericLiteral(1))),
   m.unaryExpression('!', m.unaryExpression('!', m.arrayExpression([]))),
-)
+);
 
 export const falseMatcher = m.or(
   m.booleanLiteral(false),
   m.unaryExpression('!', m.arrayExpression([])),
-)
+);
 
-export const truthyMatcher = m.or(trueMatcher, m.arrayExpression([]))
+export const truthyMatcher = m.or(trueMatcher, m.arrayExpression([]));
 
 /**
  * Starting at the parent path of the current `NodePath` and going up the
@@ -84,7 +84,7 @@ export function findParent<T extends t.Node>(
 ): NodePath<T> | null {
   return path.findParent((path) =>
     matcher.match(path.node),
-  ) as NodePath<T> | null
+  ) as NodePath<T> | null;
 }
 
 /**
@@ -96,7 +96,7 @@ export function findPath<T extends t.Node>(
   path: NodePath,
   matcher: m.Matcher<T>,
 ): NodePath<T> | null {
-  return path.find((path) => matcher.match(path.node)) as NodePath<T> | null
+  return path.find((path) => matcher.match(path.node)) as NodePath<T> | null;
 }
 
 /**
@@ -111,7 +111,7 @@ export function createFunctionMatcher(
 ): m.Matcher<t.FunctionExpression> {
   const captures = Array.from({ length: params }, () =>
     m.capture(m.anyString()),
-  )
+  );
 
   return m.functionExpression(
     undefined,
@@ -119,7 +119,7 @@ export function createFunctionMatcher(
     m.blockStatement(
       body(...captures.map((c) => m.identifier(m.fromCapture(c)))),
     ),
-  )
+  );
 }
 
 /**
@@ -131,7 +131,7 @@ export function isReadonlyObject(
 ): boolean {
   // Workaround because sometimes babel treats the VariableDeclarator/binding itself as a violation
   if (!binding.constant && binding.constantViolations[0] !== binding.path)
-    return false
+    return false;
 
   function isPatternAssignment(member: NodePath<t.Node>) {
     return (
@@ -143,7 +143,7 @@ export function isReadonlyObject(
       member.parentPath?.parentPath?.isObjectPattern() ||
       // ({ property: obj.property = 1 } = {})
       member.parentPath?.isAssignmentPattern()
-    )
+    );
   }
 
   return binding.referencePaths.every(
@@ -164,5 +164,5 @@ export function isReadonlyObject(
         operator: 'delete',
       }) &&
       !isPatternAssignment(path.parentPath!),
-  )
+  );
 }

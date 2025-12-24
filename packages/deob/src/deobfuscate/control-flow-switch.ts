@@ -1,17 +1,17 @@
-import * as t from '@babel/types'
-import * as m from '@codemod/matchers'
-import type { Transform } from '../ast-utils'
-import { constMemberExpression, infiniteLoop } from '../ast-utils'
+import * as t from '@babel/types';
+import * as m from '@codemod/matchers';
+import type { Transform } from '../ast-utils';
+import { constMemberExpression, infiniteLoop } from '../ast-utils';
 
 export default {
   name: 'controlFlowSwitch',
   tags: ['safe'],
   visitor() {
-    const sequenceName = m.capture(m.identifier())
+    const sequenceName = m.capture(m.identifier());
     const sequenceString = m.capture(
       m.matcher<string>((s) => /^\d+(\|\d+)*$/.test(s)),
-    )
-    const iterator = m.capture(m.identifier())
+    );
+    const iterator = m.capture(m.identifier());
 
     const cases = m.capture(
       m.arrayOf(
@@ -26,7 +26,7 @@ export default {
           ),
         ),
       ),
-    )
+    );
 
     const matcher = m.blockStatement(
       m.anyList<t.Statement>(
@@ -59,12 +59,12 @@ export default {
         ),
         m.zeroOrMore(),
       ),
-    )
+    );
 
     return {
       BlockStatement: {
         exit(path) {
-          if (!matcher.match(path.node)) return
+          if (!matcher.match(path.node)) return;
 
           const caseStatements = new Map(
             cases.current!.map((c) => [
@@ -73,15 +73,15 @@ export default {
                 ? c.consequent.slice(0, -1)
                 : c.consequent,
             ]),
-          )
+          );
 
-          const sequence = sequenceString.current!.split('|')
-          const newStatements = sequence.flatMap((s) => caseStatements.get(s)!)
+          const sequence = sequenceString.current!.split('|');
+          const newStatements = sequence.flatMap((s) => caseStatements.get(s)!);
 
-          path.node.body.splice(0, path.node.body.length, ...newStatements)
-          this.changes += newStatements.length + 3
+          path.node.body.splice(0, path.node.body.length, ...newStatements);
+          this.changes += newStatements.length + 3;
         },
       },
-    }
+    };
   },
-} satisfies Transform
+} satisfies Transform;

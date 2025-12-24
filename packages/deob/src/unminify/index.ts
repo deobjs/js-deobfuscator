@@ -1,7 +1,7 @@
-import { parse } from '@babel/parser'
-import type { Transform } from '../ast-utils'
-import { applyTransform, applyTransforms, generate } from '../ast-utils'
-import * as transforms from './transforms'
+import { parse } from '@babel/parser';
+import type { Transform } from '../ast-utils';
+import { applyTransform, applyTransforms, generate } from '../ast-utils';
+import * as transforms from './transforms';
 
 export const unminify = {
   name: 'unminify',
@@ -10,18 +10,18 @@ export const unminify = {
   run(ast, state) {
     state.changes += applyTransforms(ast, Object.values(transforms), {
       log: false,
-    }).changes
+    }).changes;
   },
-} satisfies Transform
+} satisfies Transform;
 
 export function unminifySource(code: string): string {
   const ast = parse(code, {
     sourceType: 'unambiguous',
     allowReturnOutsideFunction: true,
     plugins: ['jsx'],
-  })
+  });
 
-  applyTransform(ast, unminify)
+  applyTransform(ast, unminify);
 
-  return generate(ast)
+  return generate(ast);
 }

@@ -1,6 +1,6 @@
-import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
-const __dirname = new URL('.', import.meta.url).pathname
+const __dirname = new URL('.', import.meta.url).pathname;
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -63,8 +63,9 @@ export default defineNuxtConfig({
   },
   hooks: {
     'build:manifest': (manifest) => {
-      for (const key of Object.keys(manifest)) manifest[key].dynamicImports = []
+      for (const key of Object.keys(manifest))
+        manifest[key].dynamicImports = [];
     },
   },
   devtools: { enabled: true },
-})
+});

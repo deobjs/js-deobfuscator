@@ -1,13 +1,13 @@
-import { test } from 'vitest'
-import { testTransform } from '../../../test'
-import { templateLiterals } from '../transforms'
+import { test } from 'vitest';
+import { testTransform } from '../../../test';
+import { templateLiterals } from '../transforms';
 
-const expectJS = testTransform(templateLiterals)
+const expectJS = testTransform(templateLiterals);
 
 test('escape quotes', () =>
   expectJS(
     `"'".concat(foo, "' \\"").concat(bar, "\\"");`,
-  ).toMatchInlineSnapshot(`\`'\${foo}' "\${bar}"\`;`))
+  ).toMatchInlineSnapshot(`\`'\${foo}' "\${bar}"\`;`));
 
 test('expressions', () =>
   expectJS(`
@@ -20,4 +20,4 @@ test('expressions', () =>
     1 + \`\${foo}\${bar}\${baz}\`;
     1 + \`\${foo}bar\${baz}\`;
     \`\${1}\${f}oo\${true}\${b}ar\${0}\${baz}\`;
-  `))
+  `));

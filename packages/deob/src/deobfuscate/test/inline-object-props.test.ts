@@ -1,14 +1,14 @@
-import { test } from 'vitest'
-import { testTransform } from '../../../test'
-import inlineObjectProps from '../inline-object-props'
+import { test } from 'vitest';
+import { testTransform } from '../../../test';
+import inlineObjectProps from '../inline-object-props';
 
-const expectJS = testTransform(inlineObjectProps)
+const expectJS = testTransform(inlineObjectProps);
 
 test('inline property', () =>
   expectJS(`
       const a = { x: 1 };
       console.log(a.x);
-    `).toMatchInlineSnapshot('console.log(1);'))
+    `).toMatchInlineSnapshot('console.log(1);'));
 
 test('ignore non-existent properties', () =>
   expectJS(`
@@ -19,7 +19,7 @@ test('ignore non-existent properties', () =>
       x: 1
     };
     console.log(a.__defineGetter__);
-  `))
+  `));
 
 test('ignore shared variable references', () =>
   expectJS(`
@@ -32,7 +32,7 @@ test('ignore shared variable references', () =>
     };
     fn(a);
     console.log(a.x);
-  `))
+  `));
 
 test('ignore variable assignment', () =>
   expectJS(`
@@ -47,7 +47,7 @@ test('ignore variable assignment', () =>
       x: 2
     };
     console.log(a.x);
-  `))
+  `));
 
 test('ignore property assignment', () =>
   expectJS(`
@@ -60,7 +60,7 @@ test('ignore property assignment', () =>
     };
     a.x = 2;
     console.log(a.x);
-  `))
+  `));
 
 test('ignore property assignment with array pattern', () =>
   expectJS(`
@@ -73,7 +73,7 @@ test('ignore property assignment with array pattern', () =>
     };
     [a.x] = [2];
     console.log(a.x);
-  `))
+  `));
 
 test('ignore property assignment with object pattern', () =>
   expectJS(`
@@ -90,7 +90,7 @@ test('ignore property assignment with object pattern', () =>
       x: 2
     });
     console.log(a.x);
-  `))
+  `));
 
 test('ignore delete', () =>
   expectJS(`
@@ -103,7 +103,7 @@ test('ignore delete', () =>
     };
     delete a.x;
     console.log(a.x);
-  `))
+  `));
 
 test('ignore update expression', () =>
   expectJS(`
@@ -116,4 +116,4 @@ test('ignore update expression', () =>
     };
     a.x++;
     console.log(a.x);
-  `))
+  `));

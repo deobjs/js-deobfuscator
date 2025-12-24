@@ -4,8 +4,8 @@ import {
   presetIcons,
   presetUno,
   transformerDirectives,
-} from 'unocss'
-import transformerVariantGroup from '@unocss/transformer-variant-group'
+} from 'unocss';
+import transformerVariantGroup from '@unocss/transformer-variant-group';
 
 export default defineConfig({
   shortcuts: {
@@ -29,4 +29,4 @@ export default defineConfig({
     }),
   ],
   transformers: [transformerDirectives(), transformerVariantGroup()],
-})
+});

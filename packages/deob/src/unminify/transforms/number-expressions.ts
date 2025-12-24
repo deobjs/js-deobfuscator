@@ -1,6 +1,6 @@
-import * as t from '@babel/types'
-import * as m from '@codemod/matchers'
-import type { Transform } from '../../ast-utils'
+import * as t from '@babel/types';
+import * as m from '@codemod/matchers';
+import type { Transform } from '../../ast-utils';
 
 export default {
   name: 'number-expressions',
@@ -9,7 +9,7 @@ export default {
     'BinaryExpression|UnaryExpression': {
       exit(path) {
         if (matcher.match(path.node)) {
-          const evaluated = path.evaluate()
+          const evaluated = path.evaluate();
           if (evaluated.confident) {
             // Heuristic: Simplifying a division that results in a non-integer probably doesn't increase readability
             if (
@@ -17,18 +17,18 @@ export default {
               path.node.operator === '/' &&
               !Number.isInteger(evaluated.value)
             ) {
-              return
+              return;
             }
 
-            path.replaceWith(t.valueToNode(evaluated.value))
-            path.skip()
-            this.changes++
+            path.replaceWith(t.valueToNode(evaluated.value));
+            path.skip();
+            this.changes++;
           }
         }
       },
     },
   }),
-} satisfies Transform
+} satisfies Transform;
 
 const matcher: m.Matcher<t.Expression> = m.or(
   m.binaryExpression(
@@ -55,4 +55,4 @@ const matcher: m.Matcher<t.Expression> = m.or(
     ),
   ),
   m.numericLiteral(),
-)
+);

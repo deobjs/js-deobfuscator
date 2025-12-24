@@ -1,10 +1,10 @@
-export const isDark = useDark()
+export const isDark = useDark();
 
 const isAppearanceTransition =
   typeof document !== 'undefined' &&
   // @ts-expect-error: Transition API
   document.startViewTransition &&
-  !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /**
  * Credit to [@hooray](https://github.com/hooray)
@@ -12,27 +12,27 @@ const isAppearanceTransition =
  */
 export function toggleDark(event?: MouseEvent) {
   if (!isAppearanceTransition || !event) {
-    isDark.value = !isDark.value
-    return
+    isDark.value = !isDark.value;
+    return;
   }
 
-  const x = event.clientX
-  const y = event.clientY
+  const x = event.clientX;
+  const y = event.clientY;
   const endRadius = Math.hypot(
     Math.max(x, innerWidth - x),
     Math.max(y, innerHeight - y),
-  )
+  );
   // @ts-expect-error: Transition API
   const transition = document.startViewTransition(async () => {
-    isDark.value = !isDark.value
-    await nextTick()
-  })
+    isDark.value = !isDark.value;
+    await nextTick();
+  });
 
   transition.ready.then(() => {
     const clipPath = [
       `circle(0px at ${x}px ${y}px)`,
       `circle(${endRadius}px at ${x}px ${y}px)`,
-    ]
+    ];
     document.documentElement.animate(
       {
         clipPath: isDark.value ? [...clipPath].reverse() : clipPath,
@@ -44,6 +44,6 @@ export function toggleDark(event?: MouseEvent) {
           ? '::view-transition-old(root)'
           : '::view-transition-new(root)',
       },
-    )
-  })
+    );
+  });
 }
