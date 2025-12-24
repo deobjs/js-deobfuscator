@@ -1,8 +1,8 @@
-import type { Node, TraverseOptions, Visitor } from '@babel/traverse';
-import traverse, { visitors } from '@babel/traverse';
-import debug from 'debug';
+import type { Node, TraverseOptions, Visitor } from "@babel/traverse";
+import traverse, { visitors } from "@babel/traverse";
+import debug from "debug";
 
-const logger = debug('webcrack:transforms');
+const logger = debug("webcrack:transforms");
 
 export async function applyTransformAsync<TOptions>(
   ast: Node,
@@ -48,7 +48,7 @@ export function applyTransforms(
   options: { noScope?: boolean; name?: string; log?: boolean } = {},
 ): TransformState {
   options.log ??= true;
-  const name = options.name ?? transforms.map((t) => t.name).join(', ');
+  const name = options.name ?? transforms.map((t) => t.name).join(", ");
   if (options.log) logger(`${name}: started`);
   const state: TransformState = { changes: 0 };
 
@@ -86,4 +86,4 @@ export interface AsyncTransform<
   run?: (ast: Node, state: TransformState, options?: TOptions) => Promise<void>;
 }
 
-export type Tag = 'safe' | 'unsafe';
+export type Tag = "safe" | "unsafe";

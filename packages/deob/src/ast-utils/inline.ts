@@ -1,8 +1,8 @@
-import traverse, { Binding, NodePath } from '@babel/traverse';
-import * as t from '@babel/types';
-import * as m from '@codemod/matchers';
-import { findParent } from './matcher';
-import { getPropName } from '.';
+import traverse, { Binding, NodePath } from "@babel/traverse";
+import * as t from "@babel/types";
+import * as m from "@codemod/matchers";
+import { findParent } from "./matcher";
+import { getPropName } from ".";
 
 /**
  * Replace all references of a variable with the initializer.
@@ -211,7 +211,7 @@ export function inlineVariableAliases(
       m.identifier(binding.identifier.name),
     ),
     m.assignmentExpression(
-      '=',
+      "=",
       m.identifier(varName),
       m.identifier(binding.identifier.name),
     ),

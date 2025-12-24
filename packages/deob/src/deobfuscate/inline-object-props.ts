@@ -1,11 +1,11 @@
-import * as m from '@codemod/matchers';
+import * as m from "@codemod/matchers";
 import {
   Transform,
   constKey,
   constMemberExpression,
   inlineObjectProperties,
   isReadonlyObject,
-} from '../ast-utils';
+} from "../ast-utils";
 
 // TODO: move do decoder.ts collectCalls to avoid traversing the whole AST
 
@@ -27,8 +27,8 @@ import {
  * ```
  */
 export default {
-  name: 'inline-object-props',
-  tags: ['safe'],
+  name: "inline-object-props",
+  tags: ["safe"],
   scope: true,
   visitor() {
     const varId = m.capture(m.identifier());

@@ -1,10 +1,10 @@
-import { statement } from '@babel/template';
-import * as m from '@codemod/matchers';
-import type { Transform } from '../../ast-utils';
+import { statement } from "@babel/template";
+import * as m from "@codemod/matchers";
+import type { Transform } from "../../ast-utils";
 
 export default {
-  name: 'ternary-to-if',
-  tags: ['safe'],
+  name: "ternary-to-if",
+  tags: ["safe"],
   visitor() {
     const test = m.capture(m.anyExpression());
     const consequent = m.capture(m.anyExpression());

@@ -1,11 +1,11 @@
-import type { NodePath } from '@babel/traverse';
-import * as t from '@babel/types';
-import * as m from '@codemod/matchers';
-import type { Transform } from '../../ast-utils';
+import type { NodePath } from "@babel/traverse";
+import * as t from "@babel/types";
+import * as m from "@codemod/matchers";
+import type { Transform } from "../../ast-utils";
 
 export default {
-  name: 'sequence',
-  tags: ['safe'],
+  name: "sequence",
+  tags: ["safe"],
   visitor() {
     // To retain the evaluation order of `<anything> = (x(), y());`, only identifiers and member expressions are allowed.
     // `obj.foo.bar = (x(), y());` would trigger the getter for `obj.foo` before `x()` is evaluated.
@@ -36,7 +36,7 @@ export default {
             const statements = assignedSequence.current!.expressions.map(
               (expr) => t.expressionStatement(expr),
             );
-            (path.get('expression.right') as NodePath<t.Node>).replaceWith(
+            (path.get("expression.right") as NodePath<t.Node>).replaceWith(
               value,
             );
             path.insertBefore(statements);
@@ -123,7 +123,7 @@ export default {
           }
           if (
             t.isSequenceExpression(path.node.update) &&
-            path.node.body.type === 'EmptyStatement'
+            path.node.body.type === "EmptyStatement"
           ) {
             const expressions = path.node.update.expressions;
             path.node.update = expressions.pop()!;
@@ -147,7 +147,7 @@ export default {
             const statements = expressions.map((expr) =>
               t.expressionStatement(expr),
             );
-            if (path.parentPath.isForStatement() && path.key === 'init') {
+            if (path.parentPath.isForStatement() && path.key === "init") {
               path.parentPath.insertBefore(statements);
             } else {
               path.insertBefore(statements);

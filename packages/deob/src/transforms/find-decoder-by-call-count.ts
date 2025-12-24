@@ -1,8 +1,8 @@
-import * as parser from '@babel/parser';
-import type * as t from '@babel/types';
-import traverse from '@babel/traverse';
-import { generate } from '../ast-utils';
-import { Decoder } from '../deobfuscate/decoder';
+import * as parser from "@babel/parser";
+import type * as t from "@babel/types";
+import traverse from "@babel/traverse";
+import { generate } from "../ast-utils";
+import { Decoder } from "../deobfuscate/decoder";
 
 /**
  * 根据解密器调用次数寻找到解密器
@@ -54,7 +54,7 @@ export function findDecoderByCallCount(ast: t.File, count = 100) {
     shouldPrintComment: () => false,
   };
 
-  const newAst = parser.parse('');
+  const newAst = parser.parse("");
   newAst.program.body = ast.program.body.slice(0, index);
   const setupCode = generate(newAst, generateOptions);
 

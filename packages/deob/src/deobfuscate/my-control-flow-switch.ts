@@ -1,7 +1,7 @@
-import * as t from '@babel/types';
-import type { NodePath } from '@babel/traverse';
-import type { Transform } from '../ast-utils';
-import { getPropName } from '../ast-utils';
+import * as t from "@babel/types";
+import type { NodePath } from "@babel/traverse";
+import type { Transform } from "../ast-utils";
+import { getPropName } from "../ast-utils";
 
 /**
  * 控制流扁平化
@@ -43,8 +43,8 @@ import { getPropName } from '../ast-utils';
  * }
  */
 export default {
-  name: 'controlFlowSwitch',
-  tags: ['unsafe'],
+  name: "controlFlowSwitch",
+  tags: ["unsafe"],
   visitor() {
     return {
       SwitchStatement(path) {
@@ -70,11 +70,11 @@ export default {
             const propertyName = getPropName(property);
             if (
               (t.isStringLiteral(property) || t.isIdentifier(property)) &&
-              propertyName === 'split'
+              propertyName === "split"
             ) {
               if (t.isStringLiteral(object)) {
                 const shufferString = object.value; // "1|3|2|0"
-                shufferArr = shufferString.split('|');
+                shufferArr = shufferString.split("|");
 
                 // 顺带移除 var _0x263cfa = "1|3|2|0"["split"]("|"),
                 const VariableDeclarator = path.findParent((p) =>
@@ -92,12 +92,12 @@ export default {
         if (shufferArr.length === 0) return;
 
         const myArr = path.node.cases
-          .filter((p) => p.test?.type === 'StringLiteral')
+          .filter((p) => p.test?.type === "StringLiteral")
           .map((p) => p.consequent[0]);
 
         const sequences = shufferArr
           .map((s) => myArr[Number(s)])
-          .filter((s) => s?.type !== 'ContinueStatement'); // 如果 case 语句 只有 continue 则跳过
+          .filter((s) => s?.type !== "ContinueStatement"); // 如果 case 语句 只有 continue 则跳过
 
         fnBlockStatementPath.node.body.push(...sequences);
 
@@ -105,7 +105,7 @@ export default {
         if (!parentPath) return;
 
         // 将整个循环体都移除
-        if (['WhileStatement', 'ForStatement'].includes(parentPath.type))
+        if (["WhileStatement", "ForStatement"].includes(parentPath.type))
           parentPath.remove();
       },
     };

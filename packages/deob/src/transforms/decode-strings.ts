@@ -1,5 +1,5 @@
-import * as t from '@babel/types';
-import type { Decoder } from '../deobfuscate/decoder';
+import * as t from "@babel/types";
+import type { Decoder } from "../deobfuscate/decoder";
 
 /**
  * 执行解密器 (使用 eval 执行)
@@ -16,7 +16,7 @@ export function decodeStrings(decoders: Decoder[]) {
     decoder?.path.scope
       .getBinding(decoder.name)
       ?.referencePaths.forEach((ref) => {
-        if (ref?.parentKey === 'callee' && ref.parentPath?.isCallExpression()) {
+        if (ref?.parentKey === "callee" && ref.parentPath?.isCallExpression()) {
           const callExpression = ref.parentPath;
           try {
             // 如果调用解密函数中有变量参数则不替换
@@ -34,7 +34,7 @@ export function decodeStrings(decoders: Decoder[]) {
           } catch (error) {
             // 解密失败 则添加注释
             callExpression.addComment(
-              'leading',
+              "leading",
               `decode_error: ${(error as any).message}`,
               true,
             );

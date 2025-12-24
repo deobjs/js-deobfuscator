@@ -1,15 +1,15 @@
-import { test } from 'vitest';
-import { testTransform } from '../../../test';
-import { templateLiterals } from '../transforms';
+import { test } from "vitest";
+import { testTransform } from "../../../test";
+import { templateLiterals } from "../transforms";
 
 const expectJS = testTransform(templateLiterals);
 
-test('escape quotes', () =>
+test("escape quotes", () =>
   expectJS(
     `"'".concat(foo, "' \\"").concat(bar, "\\"");`,
   ).toMatchInlineSnapshot(`\`'\${foo}' "\${bar}"\`;`));
 
-test('expressions', () =>
+test("expressions", () =>
   expectJS(`
     "".concat(1);
     1 + "".concat(foo).concat(bar).concat(baz);

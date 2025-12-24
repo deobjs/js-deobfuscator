@@ -1,12 +1,12 @@
-import { describe, expect, it } from 'vitest';
-import { parse } from '@babel/parser';
-import { findDecoderByCallCount } from '../find-decoder-by-call-count';
-import { findDecoderByArray } from '../find-decoder-by-array';
-import { evalCode, generate } from '../..';
-import { decodeStrings } from '../decode-strings';
+import { describe, expect, it } from "vitest";
+import { parse } from "@babel/parser";
+import { findDecoderByCallCount } from "../find-decoder-by-call-count";
+import { findDecoderByArray } from "../find-decoder-by-array";
+import { evalCode, generate } from "../..";
+import { decodeStrings } from "../decode-strings";
 
-describe('decoder', async () => {
-  it('find decoder by call count', () => {
+describe("decoder", async () => {
+  it("find decoder by call count", () => {
     const ast = parse(`
       function decoder(a){
         return atob(a)
@@ -23,13 +23,13 @@ describe('decoder', async () => {
 
     decoders.forEach((d) => d.path.remove());
 
-    expect(decoders[0].name).toBe('decoder');
+    expect(decoders[0].name).toBe("decoder");
     expect(generate(ast)).toMatchInlineSnapshot(`
       ""Hello, world";
       "debugger";"
     `);
   });
-  it('find decoder by array', () => {
+  it("find decoder by array", () => {
     const ast = parse(`
       var arr = ["hello,world", "debugger"]
       function decoder(i){
@@ -47,8 +47,8 @@ describe('decoder', async () => {
 
     stringArray?.path.remove();
     decoders.forEach((d) => d.path.remove());
-    expect(stringArray!.name).toBe('arr');
-    expect(decoders[0].name).toBe('decoder');
+    expect(stringArray!.name).toBe("arr");
+    expect(decoders[0].name).toBe("decoder");
 
     expect(generate(ast)).toMatchInlineSnapshot(`
       ""hello,world";

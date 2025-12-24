@@ -1,8 +1,8 @@
-import type { Binding, NodePath } from '@babel/traverse';
-import * as t from '@babel/types';
-import type { FunctionExpression } from '@babel/types';
-import * as m from '@codemod/matchers';
-import type { Transform } from '../ast-utils';
+import type { Binding, NodePath } from "@babel/traverse";
+import * as t from "@babel/types";
+import type { FunctionExpression } from "@babel/types";
+import * as m from "@codemod/matchers";
+import type { Transform } from "../ast-utils";
 import {
   applyTransform,
   constKey,
@@ -12,16 +12,16 @@ import {
   getPropName,
   inlineFunction,
   isReadonlyObject,
-} from '../ast-utils';
-import mergeStrings from '../unminify/transforms/merge-strings';
+} from "../ast-utils";
+import mergeStrings from "../unminify/transforms/merge-strings";
 
 /**
  * Explanation: https://excalidraw.com/#json=0vehUdrfSS635CNPEQBXl,hDOd-UO9ETfSDWT9MxVX-A
  */
 
 export default {
-  name: 'controlFlowObject',
-  tags: ['safe'],
+  name: "controlFlowObject",
+  tags: ["safe"],
   scope: true,
   visitor() {
     const varId = m.capture(m.identifier());
@@ -83,14 +83,14 @@ export default {
     // E.g. obj.rLxJs = "6|0|4|3|1|5|2"
     const assignment = m.expressionStatement(
       m.assignmentExpression(
-        '=',
+        "=",
         constMemberExpression(m.fromCapture(varId), assignedKey),
         assignedValue,
       ),
     );
     const looseAssignment = m.expressionStatement(
       m.assignmentExpression(
-        '=',
+        "=",
         constMemberExpression(m.fromCapture(varId), assignedKey),
       ),
     );

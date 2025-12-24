@@ -4,7 +4,7 @@ export default defineNuxtPlugin(() => {
   monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
     allowComments: true,
     enableSchemaRequest: true,
-    trailingCommas: 'ignore',
+    trailingCommas: "ignore",
   });
 
   monaco.languages.typescript.typescriptDefaults.setCompilerOptions({

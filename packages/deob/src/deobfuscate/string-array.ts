@@ -1,12 +1,12 @@
-import type { NodePath } from '@babel/traverse';
-import traverse from '@babel/traverse';
-import type * as t from '@babel/types';
-import * as m from '@codemod/matchers';
+import type { NodePath } from "@babel/traverse";
+import traverse from "@babel/traverse";
+import type * as t from "@babel/types";
+import * as m from "@codemod/matchers";
 import {
   inlineArrayElements,
   isReadonlyObject,
   renameFast,
-} from '../ast-utils';
+} from "../ast-utils";
 
 export interface StringArray {
   path: NodePath<t.FunctionDeclaration>;
@@ -24,7 +24,7 @@ export function findStringArray(ast: t.Node): StringArray | undefined {
   );
   // getStringArray = function () { return n; };
   const functionAssignment = m.assignmentExpression(
-    '=',
+    "=",
     m.identifier(m.fromCapture(functionName)),
     m.functionExpression(
       undefined,
@@ -64,12 +64,12 @@ export function findStringArray(ast: t.Node): StringArray | undefined {
         const length = arrayExpression.current!.elements.length;
         const name = functionName.current!;
         const binding = path.scope.getBinding(name)!;
-        renameFast(binding, '__STRING_ARRAY__');
+        renameFast(binding, "__STRING_ARRAY__");
 
         result = {
           path,
           references: binding.referencePaths,
-          name: '__STRING_ARRAY__',
+          name: "__STRING_ARRAY__",
           length,
         };
         path.stop();

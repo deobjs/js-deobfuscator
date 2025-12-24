@@ -1,7 +1,7 @@
-import type { NodePath } from '@babel/traverse';
-import * as t from '@babel/types';
-import traverse from '@babel/traverse';
-import { getPropName } from '../ast-utils';
+import type { NodePath } from "@babel/traverse";
+import * as t from "@babel/types";
+import traverse from "@babel/traverse";
+import { getPropName } from "../ast-utils";
 
 export type Objects = Record<`${string}_${string}`, t.ObjectExpression>;
 
@@ -41,9 +41,9 @@ export function saveObjects(ast: t.Node) {
     VariableDeclaration: {
       exit(path, state) {
         path.node.declarations.forEach((declaration) => {
-          if (declaration.id.type === 'Identifier') {
+          if (declaration.id.type === "Identifier") {
             const objectName = declaration.id.name;
-            if (declaration.init?.type === 'ObjectExpression') {
+            if (declaration.init?.type === "ObjectExpression") {
               objects[`${declaration.start}_${objectName}`] = declaration.init;
 
               // 在同作用域下将变量重命名 var u = e; ---> var e = e; 同时一并移除
@@ -52,7 +52,7 @@ export function saveObjects(ast: t.Node) {
                 !(
                   binding &&
                   binding.path.isVariableDeclarator() &&
-                  binding.path.get('init')?.isObjectExpression()
+                  binding.path.get("init")?.isObjectExpression()
                 )
               )
                 return;
@@ -83,7 +83,7 @@ export function saveObjects(ast: t.Node) {
     AssignmentExpression: {
       exit(path) {
         const { left, right } = path.node;
-        if (left.type !== 'MemberExpression') return;
+        if (left.type !== "MemberExpression") return;
 
         if (!t.isLiteral(left.property)) return;
 
@@ -107,8 +107,8 @@ export function saveObjects(ast: t.Node) {
         if (
           !(
             binding &&
-            binding.path.node.type === 'VariableDeclarator' &&
-            binding.path.node.init?.type === 'ObjectExpression'
+            binding.path.node.type === "VariableDeclarator" &&
+            binding.path.node.init?.type === "ObjectExpression"
           )
         )
           return;
@@ -134,7 +134,7 @@ export function saveObjects(ast: t.Node) {
             const keyIndex = objects[
               `${start}_${objectName}`
             ].properties.findIndex((p) => {
-              if (p.type === 'ObjectProperty') {
+              if (p.type === "ObjectProperty") {
                 const propName = getPropName(left.property);
                 const keyName = getPropName(p.key);
 
@@ -149,13 +149,13 @@ export function saveObjects(ast: t.Node) {
             isReplace = true;
           }
         } catch (error) {
-          throw new Error('生成表达式失败');
+          throw new Error("生成表达式失败");
         }
 
         if (isReplace) {
           if (
-            path.parentPath.type === 'SequenceExpression' ||
-            path.parentPath.type === 'ExpressionStatement'
+            path.parentPath.type === "SequenceExpression" ||
+            path.parentPath.type === "ExpressionStatement"
           )
             path.remove(); // 移除自身赋值语句
         }
@@ -170,7 +170,7 @@ export function saveObjects(ast: t.Node) {
       VariableDeclarator(p) {
         const { id, init } = p.node;
 
-        if (init && init.type === 'Identifier' && id.type === 'Identifier') {
+        if (init && init.type === "Identifier" && id.type === "Identifier") {
           if (init.name === objectName) {
             p.scope.rename(id.name, objectName);
             // !!! 移除后 再次解析会导致 start 定位变更, 致使后续对象替换失效, 因此执行替换前不要执行 reParse

@@ -1,15 +1,15 @@
-import * as t from '@babel/types';
-import { Transform } from '../../ast-utils';
+import * as t from "@babel/types";
+import { Transform } from "../../ast-utils";
 
 export default {
-  name: 'split-variable-declarations',
-  tags: ['safe'],
+  name: "split-variable-declarations",
+  tags: ["safe"],
   visitor: () => ({
     VariableDeclaration: {
       exit(path) {
         if (path.node.declarations.length > 1) {
           // E.g. for (let i = 0, j = 1;;)
-          if (path.key === 'init' && path.parentPath.isForStatement()) {
+          if (path.key === "init" && path.parentPath.isForStatement()) {
             if (!path.parentPath.node.test && !path.parentPath.node.update) {
               path.parentPath.insertBefore(
                 path.node.declarations.map((declaration) =>

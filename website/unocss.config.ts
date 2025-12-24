@@ -4,15 +4,15 @@ import {
   presetIcons,
   presetUno,
   transformerDirectives,
-} from 'unocss';
-import transformerVariantGroup from '@unocss/transformer-variant-group';
+} from "unocss";
+import transformerVariantGroup from "@unocss/transformer-variant-group";
 
 export default defineConfig({
   shortcuts: {
-    'border-base': 'border-$c-border',
-    'border-bg-base': 'border-$c-bg-base',
-    'bg-base': 'bg-$c-bg-base',
-    'text-base': 'text-$c-text-base',
+    "border-base": "border-$c-border",
+    "border-bg-base": "border-$c-bg-base",
+    "bg-base": "bg-$c-bg-base",
+    "text-base": "text-$c-text-base",
   },
   presets: [
     presetUno({
@@ -22,9 +22,9 @@ export default defineConfig({
     presetIcons({
       scale: 1.2,
       extraProperties: {
-        color: 'inherit',
+        color: "inherit",
         // Avoid crushing of icons in crowded situations
-        'min-width': '1.2em',
+        "min-width": "1.2em",
       },
     }),
   ],

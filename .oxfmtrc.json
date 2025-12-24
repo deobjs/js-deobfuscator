@@ -1,6 +1,4 @@
 {
   "printWidth": 80,
-  "proseWrap": "never",
-  "singleQuote": true,
   "ignorePatterns": ["example/**", "website/.output/**"]
 }

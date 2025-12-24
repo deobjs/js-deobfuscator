@@ -1,6 +1,6 @@
-import { Binding, NodePath } from '@babel/traverse';
-import * as t from '@babel/types';
-import * as m from '@codemod/matchers';
+import { Binding, NodePath } from "@babel/traverse";
+import * as t from "@babel/types";
+import * as m from "@codemod/matchers";
 
 export const anyLiteral: m.Matcher<t.Literal> = m.matcher(
   (node) =>
@@ -52,7 +52,7 @@ export function constMemberExpression(
   object: string | m.Matcher<t.Expression>,
   property?: string | m.Matcher<string>,
 ): m.Matcher<t.MemberExpression> {
-  if (typeof object === 'string') object = m.identifier(object);
+  if (typeof object === "string") object = m.identifier(object);
   return m.or(
     m.memberExpression(object, m.identifier(property), false),
     m.memberExpression(object, m.stringLiteral(property), true),
@@ -61,14 +61,14 @@ export function constMemberExpression(
 
 export const trueMatcher = m.or(
   m.booleanLiteral(true),
-  m.unaryExpression('!', m.numericLiteral(0)),
-  m.unaryExpression('!', m.unaryExpression('!', m.numericLiteral(1))),
-  m.unaryExpression('!', m.unaryExpression('!', m.arrayExpression([]))),
+  m.unaryExpression("!", m.numericLiteral(0)),
+  m.unaryExpression("!", m.unaryExpression("!", m.numericLiteral(1))),
+  m.unaryExpression("!", m.unaryExpression("!", m.arrayExpression([]))),
 );
 
 export const falseMatcher = m.or(
   m.booleanLiteral(false),
-  m.unaryExpression('!', m.arrayExpression([])),
+  m.unaryExpression("!", m.arrayExpression([])),
 );
 
 export const truthyMatcher = m.or(trueMatcher, m.arrayExpression([]));
@@ -161,7 +161,7 @@ export function isReadonlyObject(
       // delete obj.property
       !path.parentPath?.parentPath?.isUnaryExpression({
         argument: path.parent,
-        operator: 'delete',
+        operator: "delete",
       }) &&
       !isPatternAssignment(path.parentPath!),
   );

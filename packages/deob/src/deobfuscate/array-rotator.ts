@@ -1,9 +1,9 @@
-import type { NodePath } from '@babel/traverse';
-import type * as t from '@babel/types';
-import * as m from '@codemod/matchers';
-import { callExpression } from '@codemod/matchers';
-import { constMemberExpression, findParent, infiniteLoop } from '../ast-utils';
-import type { StringArray } from './string-array';
+import type { NodePath } from "@babel/traverse";
+import type * as t from "@babel/types";
+import * as m from "@codemod/matchers";
+import { callExpression } from "@codemod/matchers";
+import { constMemberExpression, findParent, infiniteLoop } from "../ast-utils";
+import type { StringArray } from "./string-array";
 
 export type ArrayRotator = NodePath<t.ExpressionStatement>;
 
@@ -27,10 +27,10 @@ export function findArrayRotator(
 
   // e.g. array.push(array.shift())
   const pushShift = m.callExpression(
-    constMemberExpression(arrayIdentifier, 'push'),
+    constMemberExpression(arrayIdentifier, "push"),
     [
       m.callExpression(
-        constMemberExpression(m.fromCapture(arrayIdentifier), 'shift'),
+        constMemberExpression(m.fromCapture(arrayIdentifier), "shift"),
       ),
     ],
   );
@@ -46,7 +46,7 @@ export function findArrayRotator(
             m.matcher((node) => {
               return (
                 m
-                  .containerOf(callExpression(m.identifier('parseInt')))
+                  .containerOf(callExpression(m.identifier("parseInt")))
                   .match(node) &&
                 m
                   .blockStatement([
@@ -65,7 +65,7 @@ export function findArrayRotator(
   );
 
   const matcher = m.expressionStatement(
-    m.or(callMatcher, m.unaryExpression('!', callMatcher)),
+    m.or(callMatcher, m.unaryExpression("!", callMatcher)),
   );
 
   for (const ref of stringArray.references) {

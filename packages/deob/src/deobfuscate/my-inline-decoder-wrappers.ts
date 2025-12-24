@@ -1,9 +1,9 @@
-import type { NodePath } from '@babel/traverse';
-import type * as t from '@babel/types';
-import { expression } from '@babel/template';
-import { type Transform, generate } from '../ast-utils';
+import type { NodePath } from "@babel/traverse";
+import type * as t from "@babel/types";
+import { expression } from "@babel/template";
+import { type Transform, generate } from "../ast-utils";
 
-import { Decoder } from './decoder';
+import { Decoder } from "./decoder";
 
 /**
  * 嵌套函数花指令替换 需要优先执行 通常内嵌解密函数
@@ -17,8 +17,8 @@ import { Decoder } from './decoder';
  * _0x4698(469 - -674, 828)
  */
 export default {
-  name: 'inlineDecoderWrappers',
-  tags: ['unsafe'],
+  name: "inlineDecoderWrappers",
+  tags: ["unsafe"],
   visitor() {
     const processFunction = (
       path: NodePath<t.FunctionDeclaration | t.FunctionExpression>,
@@ -27,22 +27,22 @@ export default {
         ? path.node.id!.name
         : path.parentPath.isVariableDeclarator()
           ? (path.parentPath.node.id as t.Identifier)!.name
-          : '';
+          : "";
 
       // if (decoderNameList.includes(fnName)) return
 
       const firstStatement = path
-        .get('body')
-        .get('body')?.[0] as NodePath<t.ReturnStatement>;
+        .get("body")
+        .get("body")?.[0] as NodePath<t.ReturnStatement>;
 
       // 在原代码中，函数体就一行 return 语句 并且 参数还是函数表达式
       if (firstStatement && firstStatement.isReturnStatement()) {
         // 真实调用函数(解密函数)
-        const realFn = firstStatement.get('argument');
+        const realFn = firstStatement.get("argument");
 
         if (!realFn.isCallExpression()) return;
 
-        const realFnCallee = realFn.get('callee');
+        const realFnCallee = realFn.get("callee");
         if (realFnCallee.isIdentifier()) return;
 
         // 包装函数
@@ -55,7 +55,7 @@ export default {
         binding.referencePaths.forEach((ref) => {
           // 通过引用找到调用混淆函数的,需要拿到实际传入的参数
           if (
-            ref.parentKey === 'callee' &&
+            ref.parentKey === "callee" &&
             ref.parentPath?.isCallExpression()
           ) {
             // 调用传入参数 -57, 1080, 828, 469
@@ -72,12 +72,12 @@ export default {
 
             // 遍历 (_0x254ae1, _0x559602, _0x3dfa50, _0x13ee81)
             wrapFn.node.params.forEach((param, i) => {
-              if (param.type !== 'Identifier') return;
+              if (param.type !== "Identifier") return;
 
               // 如果模版中不存在标识符则没有用到
               if (templateCode.includes(param.name)) {
                 templateCode = templateCode.replace(
-                  new RegExp(`${param.name}`, 'g'),
+                  new RegExp(`${param.name}`, "g"),
                   `%%${param.name}%%`,
                 );
 
@@ -109,7 +109,7 @@ export default {
         return processFunction(path);
       },
       FunctionExpression(path) {
-        if (path.parentKey === 'init' && path.parentPath.isVariableDeclarator())
+        if (path.parentKey === "init" && path.parentPath.isVariableDeclarator())
           processFunction(path);
       },
     };

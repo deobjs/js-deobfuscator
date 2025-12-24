@@ -1,8 +1,8 @@
-import type { Transform } from '../../ast-utils';
+import type { Transform } from "../../ast-utils";
 
 export default {
-  name: 'raw-literals',
-  tags: ['safe'],
+  name: "raw-literals",
+  tags: ["safe"],
   visitor: () => ({
     StringLiteral(path) {
       if (path.node.extra) {

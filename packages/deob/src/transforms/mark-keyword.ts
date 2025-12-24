@@ -1,5 +1,5 @@
-import traverse from '@babel/traverse';
-import * as t from '@babel/types';
+import traverse from "@babel/traverse";
+import * as t from "@babel/types";
 
 export interface Options {
   keywords: string[];
@@ -16,10 +16,10 @@ export interface Options {
  */
 export function markKeyword(
   ast: t.Node,
-  keywords = ['debugger'],
-  label = ' TOLOOK',
+  keywords = ["debugger"],
+  label = " TOLOOK",
 ) {
-  const defaultKeywords = ['debugger', 'setTimeout', 'setInterval'];
+  const defaultKeywords = ["debugger", "setTimeout", "setInterval"];
   keywords = [
     ...new Set([...keywords.map((k) => k.toLowerCase()), ...defaultKeywords]),
   ];
@@ -33,14 +33,14 @@ export function markKeyword(
         );
         if (hasComment) return;
 
-        path.addComment('leading', label, true);
+        path.addComment("leading", label, true);
       },
     },
     CallExpression: {
       exit(path) {
         if (t.isIdentifier(path.node.callee)) {
           if (!keywords.includes(path.node.callee.name)) return;
-          path.addComment('leading', label, true);
+          path.addComment("leading", label, true);
         }
       },
     },
@@ -48,8 +48,8 @@ export function markKeyword(
       exit(path) {
         if (keywords.includes(path.node.value.toLowerCase())) {
           const statementPath = path.findParent((p) => p.isStatement());
-          if (statementPath) statementPath.addComment('leading', label, true);
-          else path.addComment('leading', label, true);
+          if (statementPath) statementPath.addComment("leading", label, true);
+          else path.addComment("leading", label, true);
         }
       },
     },
@@ -58,8 +58,8 @@ export function markKeyword(
         const name = path.node.name;
         if (keywords.includes(name.toLowerCase())) {
           const statementPath = path.findParent((p) => p.isStatement());
-          if (statementPath) statementPath.addComment('leading', label, true);
-          else path.addComment('leading', label, true);
+          if (statementPath) statementPath.addComment("leading", label, true);
+          else path.addComment("leading", label, true);
         }
       },
     },

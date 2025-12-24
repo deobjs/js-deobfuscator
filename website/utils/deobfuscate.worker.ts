@@ -1,7 +1,7 @@
-import { Deob, type Options } from 'deob';
+import { Deob, type Options } from "deob";
 
 self.addEventListener(
-  'message',
+  "message",
   ({ data }: { data: { code: string; options: Options } }) => {
     const { code, options } = data;
 

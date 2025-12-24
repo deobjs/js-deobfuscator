@@ -1,14 +1,14 @@
-import { expression } from '@babel/template';
-import { NodePath } from '@babel/traverse';
-import * as t from '@babel/types';
-import * as m from '@codemod/matchers';
+import { expression } from "@babel/template";
+import { NodePath } from "@babel/traverse";
+import * as t from "@babel/types";
+import * as m from "@codemod/matchers";
 import {
   anyLiteral,
   findParent,
   inlineVariable,
   renameFast,
-} from '../ast-utils';
-import { StringArray } from './string-array';
+} from "../ast-utils";
+import { StringArray } from "./string-array";
 
 /**
  * A function that is called with >= 1 numeric/string arguments
@@ -34,7 +34,7 @@ export class Decoder {
         m.matcher((node) => literalArgument.match(node)),
       ),
       m.unaryExpression(
-        '-',
+        "-",
         m.matcher((node) => literalArgument.match(node)),
       ),
       m.numericLiteral(),

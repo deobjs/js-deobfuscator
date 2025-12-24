@@ -1,6 +1,6 @@
-import traverse from '@babel/traverse';
-import type * as t from '@babel/types';
-import { Decoder } from '../deobfuscate/decoder';
+import traverse from "@babel/traverse";
+import type * as t from "@babel/types";
+import { Decoder } from "../deobfuscate/decoder";
 
 export function designDecoder(
   ast: t.Node,

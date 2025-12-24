@@ -1,16 +1,16 @@
-import * as t from '@babel/types';
-import * as m from '@codemod/matchers';
-import type { Transform } from '../../ast-utils';
+import * as t from "@babel/types";
+import * as m from "@codemod/matchers";
+import type { Transform } from "../../ast-utils";
 
 export default {
-  name: 'unary-expressions',
-  tags: ['safe'],
+  name: "unary-expressions",
+  tags: ["safe"],
   visitor() {
     const argument = m.capture(m.anyExpression());
     const matcher = m.expressionStatement(
-      m.unaryExpression(m.or('void', '!', 'typeof'), argument),
+      m.unaryExpression(m.or("void", "!", "typeof"), argument),
     );
-    const returnVoid = m.returnStatement(m.unaryExpression('void', argument));
+    const returnVoid = m.returnStatement(m.unaryExpression("void", argument));
     return {
       ExpressionStatement: {
         exit(path) {

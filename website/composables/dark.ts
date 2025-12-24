@@ -1,10 +1,10 @@
 export const isDark = useDark();
 
 const isAppearanceTransition =
-  typeof document !== 'undefined' &&
+  typeof document !== "undefined" &&
   // @ts-expect-error: Transition API
   document.startViewTransition &&
-  !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /**
  * Credit to [@hooray](https://github.com/hooray)
@@ -39,10 +39,10 @@ export function toggleDark(event?: MouseEvent) {
       },
       {
         duration: 400,
-        easing: 'ease-in',
+        easing: "ease-in",
         pseudoElement: isDark.value
-          ? '::view-transition-old(root)'
-          : '::view-transition-new(root)',
+          ? "::view-transition-old(root)"
+          : "::view-transition-new(root)",
       },
     );
   });

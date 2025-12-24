@@ -1,18 +1,18 @@
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
-const __dirname = new URL('.', import.meta.url).pathname;
+const __dirname = new URL(".", import.meta.url).pathname;
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@unocss/nuxt', '@vueuse/nuxt', 'nuxt-monaco-editor'],
+  modules: ["@unocss/nuxt", "@vueuse/nuxt", "nuxt-monaco-editor"],
   app: {
     head: {
-      title: 'JS Deobfuscator',
+      title: "JS Deobfuscator",
       link: [
         {
-          rel: 'icon',
-          type: 'image/svg+xml',
-          href: '/logo.svg',
+          rel: "icon",
+          type: "image/svg+xml",
+          href: "/logo.svg",
         },
       ],
     },
@@ -21,7 +21,7 @@ export default defineNuxtConfig({
   typescript: {
     tsConfig: {
       compilerOptions: {
-        moduleResolution: 'bundler',
+        moduleResolution: "bundler",
       },
     },
   },
@@ -30,39 +30,39 @@ export default defineNuxtConfig({
   },
   vite: {
     optimizeDeps: {
-      exclude: ['isolated-vm'],
+      exclude: ["isolated-vm"],
     },
     build: {
-      target: 'chrome89',
+      target: "chrome89",
       sourcemap: true,
       rollupOptions: {
-        external: ['isolated-vm'],
+        external: ["isolated-vm"],
       },
     },
     worker: {
-      format: 'es',
+      format: "es",
     },
     define: {
-      'process.env': JSON.stringify({}),
-      'process.versions.node': JSON.stringify('18.17.1'),
+      "process.env": JSON.stringify({}),
+      "process.versions.node": JSON.stringify("18.17.1"),
     },
     resolve: {
       alias: {
         // @codemod/matchers imports @codemod/utils which imports @babel/core, but it's not needed
         // by replacing it with a dummy module we can reduce the bundle size by 360kb
-        '@babel/core': `${__dirname}/_empty.ts`,
-        'isolated-vm': `${__dirname}/_empty.ts`,
+        "@babel/core": `${__dirname}/_empty.ts`,
+        "isolated-vm": `${__dirname}/_empty.ts`,
         deob: `${__dirname}../packages/deob/src`,
       },
     },
-    plugins: [nodePolyfills({ exclude: ['fs'] })],
+    plugins: [nodePolyfills({ exclude: ["fs"] })],
   },
-  css: ['@unocss/reset/tailwind.css', '~/styles/global.css'],
+  css: ["@unocss/reset/tailwind.css", "~/styles/global.css"],
   imports: {
-    dirs: ['./composables', './utils'],
+    dirs: ["./composables", "./utils"],
   },
   hooks: {
-    'build:manifest': (manifest) => {
+    "build:manifest": (manifest) => {
       for (const key of Object.keys(manifest))
         manifest[key].dynamicImports = [];
     },

@@ -1,9 +1,9 @@
-import * as t from '@babel/types';
-import type { Transform } from '../../ast-utils';
+import * as t from "@babel/types";
+import type { Transform } from "../../ast-utils";
 
 export default {
-  name: 'block-statements',
-  tags: ['safe'],
+  name: "block-statements",
+  tags: ["safe"],
   visitor: () => ({
     IfStatement: {
       exit(path) {

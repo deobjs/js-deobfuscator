@@ -6,10 +6,10 @@ export interface Options {
   inlineWrappersDepth?: number;
   /** 解密器定位方式 */
   decoderLocationMethod?:
-    | 'obfuscate'
-    | 'callCount'
-    | 'stringArray'
-    | 'evalCode';
+    | "obfuscate"
+    | "callCount"
+    | "stringArray"
+    | "evalCode";
   /** 解密器调用次数 */
   decoderCallCount?: number;
   /** 字符串数组长度 */
@@ -41,17 +41,17 @@ export const defaultOptions: Required<Options> = {
   isStrongRemove: false,
 
   inlineWrappersDepth: 2,
-  decoderLocationMethod: 'stringArray',
+  decoderLocationMethod: "stringArray",
   decoderCallCount: 150,
   stringArraylength: 150,
-  setupCode: '',
-  designDecoderName: '',
+  setupCode: "",
+  designDecoderName: "",
   isRemoveDecoder: true,
 
   execCount: 2,
 
   isMarkEnable: true,
-  keywords: ['debugger'],
+  keywords: ["debugger"],
 
   isDebug: false,
   mangle: false,

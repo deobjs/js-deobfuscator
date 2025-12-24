@@ -1,4 +1,4 @@
-import type { Options } from 'deob';
+import type { Options } from "deob";
 
 // import { defaultOptions } from 'deob'
 
@@ -7,27 +7,27 @@ export const defaultOptions: Required<Options> = {
   isStrongRemove: false,
 
   inlineWrappersDepth: 2,
-  decoderLocationMethod: 'stringArray',
+  decoderLocationMethod: "stringArray",
   decoderCallCount: 150,
   stringArraylength: 150,
-  setupCode: '',
-  designDecoderName: '',
+  setupCode: "",
+  designDecoderName: "",
   isRemoveDecoder: true,
 
   execCount: 2,
 
   isMarkEnable: true,
-  keywords: ['debugger'],
+  keywords: ["debugger"],
 
   isDebug: false,
   mangle: false,
   isMinifiedEnable: false,
 };
 
-const PREFIX = 'js-deobfuscator:';
+const PREFIX = "js-deobfuscator:";
 
-export const loading = ref<'load' | 'parse' | false>(false);
-export const code = ref('');
+export const loading = ref<"load" | "parse" | false>(false);
+export const code = ref("");
 export const ast = shallowRef<unknown>({});
 export const error = shallowRef<unknown>();
 export const parseTime = ref(0);
@@ -49,7 +49,7 @@ const location = useBrowserLocation();
 
 const rawUrlState = location.value.hash
   ? atou(location.value.hash!.slice(1))
-  : '';
+  : "";
 if (rawUrlState) {
   const urlState = JSON.parse(rawUrlState);
   code.value = urlState.c;
@@ -83,9 +83,9 @@ watch(
   [currentParser, code],
   async () => {
     try {
-      loading.value = 'load';
+      loading.value = "load";
       const ctx = await parserContext.value;
-      loading.value = 'parse';
+      loading.value = "parse";
       ast.value = await currentParser.value.parse.call(
         await ctx,
         code.value,

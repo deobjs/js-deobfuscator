@@ -1,16 +1,16 @@
-import traverse, { NodePath } from '@babel/traverse';
-import * as t from '@babel/types';
-import mangle from 'babel-plugin-minify-mangle-names';
-import type { Transform } from '../ast-utils';
+import traverse, { NodePath } from "@babel/traverse";
+import * as t from "@babel/types";
+import mangle from "babel-plugin-minify-mangle-names";
+import type { Transform } from "../ast-utils";
 
 export default {
-  name: 'mangle',
-  tags: ['safe'],
+  name: "mangle",
+  tags: ["safe"],
   scope: true,
   run(ast) {
     // path.hub is undefined for some reason, monkey-patch to avoid error...
     const { getSource } = NodePath.prototype;
-    NodePath.prototype.getSource = () => '';
+    NodePath.prototype.getSource = () => "";
 
     traverse(ast, mangle({ types: t, traverse }).visitor, undefined, {
       opts: {

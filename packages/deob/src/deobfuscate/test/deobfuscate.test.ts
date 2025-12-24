@@ -1,14 +1,14 @@
-import { parse } from '@babel/parser';
-import traverse from '@babel/traverse';
-import { describe, expect, test } from 'vitest';
+import { parse } from "@babel/parser";
+import traverse from "@babel/traverse";
+import { describe, expect, test } from "vitest";
 import {
   generate,
   inlineFunctionAliases,
   inlineVariableAliases,
-} from '../../ast-utils';
+} from "../../ast-utils";
 
-describe('inline decoder', () => {
-  test('inline variable', () => {
+describe("inline decoder", () => {
+  test("inline variable", () => {
     const ast = parse(`
       function decoder() {}
       decoder(1);
@@ -27,7 +27,7 @@ describe('inline decoder', () => {
   `);
     traverse(ast, {
       FunctionDeclaration(path) {
-        const binding = path.scope.getBinding('decoder')!;
+        const binding = path.scope.getBinding("decoder")!;
         inlineVariableAliases(binding);
         path.stop();
       },
@@ -35,7 +35,7 @@ describe('inline decoder', () => {
     expect(generate(ast)).toMatchSnapshot();
   });
 
-  test('inline function', () => {
+  test("inline function", () => {
     const ast = parse(`
       function decoder() {}
       decoder(1);

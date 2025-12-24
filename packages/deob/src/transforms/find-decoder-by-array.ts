@@ -1,10 +1,10 @@
-import type * as t from '@babel/types';
-import type { NodePath } from '@babel/traverse';
-import traverse from '@babel/traverse';
+import type * as t from "@babel/types";
+import type { NodePath } from "@babel/traverse";
+import traverse from "@babel/traverse";
 
-import { generate } from '../ast-utils';
-import { Decoder } from '../deobfuscate/decoder';
-import type { ArrayRotator } from '../deobfuscate/array-rotator';
+import { generate } from "../ast-utils";
+import { Decoder } from "../deobfuscate/decoder";
+import type { ArrayRotator } from "../deobfuscate/array-rotator";
 
 export function findDecoderByArray(ast: t.Node, count: number = 100) {
   // 大数组 有可能是以函数形式包裹的
@@ -36,7 +36,7 @@ export function findDecoderByArray(ast: t.Node, count: number = 100) {
         // if (!stringArrayDeclaration?.parentPath?.isProgram())
         // return
 
-        let stringArrayName = '';
+        let stringArrayName = "";
         let stringArrayPath;
         if (stringArrayDeclaration.isVariableDeclarator()) {
           // var a = []
@@ -60,7 +60,7 @@ export function findDecoderByArray(ast: t.Node, count: number = 100) {
         } else if (stringArrayDeclaration.isExpressionStatement()) {
           if (
             stringArrayDeclaration.node.expression.type ===
-            'AssignmentExpression'
+            "AssignmentExpression"
           ) {
             // a = []
             stringArrayName = (
@@ -82,7 +82,7 @@ export function findDecoderByArray(ast: t.Node, count: number = 100) {
 
         // 通过引用 找到 数组乱序代码 与 解密函数代码
         binding.referencePaths.forEach((r) => {
-          if (r.parentKey === 'callee') {
+          if (r.parentKey === "callee") {
             const parent = r.find((p) => p.isFunctionDeclaration());
             if (
               parent?.isFunctionDeclaration() &&
@@ -95,7 +95,7 @@ export function findDecoderByArray(ast: t.Node, count: number = 100) {
             }
           }
 
-          if (r.parentKey === 'object') {
+          if (r.parentKey === "object") {
             const parent = r.find((p) => p.isFunctionDeclaration());
             if (parent?.isFunctionDeclaration()) {
               // function decoder(x){
@@ -105,7 +105,7 @@ export function findDecoderByArray(ast: t.Node, count: number = 100) {
             }
           }
 
-          if (r.parentKey === 'arguments') {
+          if (r.parentKey === "arguments") {
             const parent = r.parentPath;
             const parent_expression = parent?.findParent((p) =>
               p.isExpressionStatement(),
@@ -145,15 +145,15 @@ export function findDecoderByArray(ast: t.Node, count: number = 100) {
   };
   const stringArrayCode = stringArray
     ? generate(stringArray.path.node, generateOptions)
-    : '';
+    : "";
   const rotatorCode = rotators
     .map((rotator) => generate(rotator.node, generateOptions))
-    .join(';\n');
+    .join(";\n");
   const decoderCode = decoders
     .map((decoder) => generate(decoder.path.node, generateOptions))
-    .join(';\n');
+    .join(";\n");
 
-  const setupCode = [stringArrayCode, rotatorCode, decoderCode].join(';\n');
+  const setupCode = [stringArrayCode, rotatorCode, decoderCode].join(";\n");
 
   return {
     stringArray,

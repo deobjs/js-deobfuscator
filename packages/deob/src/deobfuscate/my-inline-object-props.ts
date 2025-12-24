@@ -1,10 +1,10 @@
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-nocheck
-import * as t from '@babel/types';
-import traverse from '@babel/traverse';
-import generate from '@babel/generator';
-import { type Transform, getPropName } from '../ast-utils';
-import type { Objects } from './save-objects';
+import * as t from "@babel/types";
+import traverse from "@babel/traverse";
+import generate from "@babel/generator";
+import { type Transform, getPropName } from "../ast-utils";
+import type { Objects } from "./save-objects";
 
 /**
  * 对象属性替换 需要先执行 saveAllObject 用于保存所有变量
@@ -23,7 +23,7 @@ import type { Objects } from './save-objects';
  * _0x3028("foo")
  */
 export default {
-  name: '对象属性引用替换',
+  name: "对象属性引用替换",
   run(ast, state, objects) {
     if (!objects) return;
 
@@ -38,12 +38,12 @@ export default {
       MemberExpression(path) {
         // 父级表达式不能是赋值语句
         const asignment = path.parentPath;
-        if (!asignment || asignment?.type === 'AssignmentExpression') return;
+        if (!asignment || asignment?.type === "AssignmentExpression") return;
 
         const { object, property } = path.node;
         if (
-          object.type === 'Identifier' &&
-          (property.type === 'StringLiteral' || property.type === 'Identifier')
+          object.type === "Identifier" &&
+          (property.type === "StringLiteral" || property.type === "Identifier")
         ) {
           const objectName = object.name;
 
@@ -60,11 +60,11 @@ export default {
 
             const properties = objectInit.properties;
             for (const prop of properties) {
-              if (prop.type === 'ObjectProperty') {
+              if (prop.type === "ObjectProperty") {
                 const keyName = getPropName(prop.key);
                 if (
-                  (prop.key.type === 'StringLiteral' ||
-                    prop.key.type === 'Identifier') &&
+                  (prop.key.type === "StringLiteral" ||
+                    prop.key.type === "Identifier") &&
                   keyName === propertyName &&
                   t.isLiteral(prop.value)
                 ) {
@@ -76,7 +76,7 @@ export default {
                     binding.constantViolations.length === 0
                   ) {
                     // 针对一些特殊代码不进行处理 如 _0x52627b["QqaUY"]++
-                    if (path.parent.type === 'UpdateExpression') return;
+                    if (path.parent.type === "UpdateExpression") return;
 
                     usedMap.set(
                       `${objectName}.${propertyName}`,
@@ -105,8 +105,8 @@ export default {
       CallExpression(path) {
         const { callee } = path.node;
         if (
-          callee.type === 'MemberExpression' &&
-          callee.object.type === 'Identifier'
+          callee.type === "MemberExpression" &&
+          callee.object.type === "Identifier"
         ) {
           const objectName = callee.object.name;
           const propertyName = getPropName(callee.property);
@@ -126,14 +126,14 @@ export default {
             const argumentList = path.node.arguments;
 
             for (const prop of properties) {
-              if (prop.type !== 'ObjectProperty') continue;
+              if (prop.type !== "ObjectProperty") continue;
 
               const keyName = getPropName(prop.key);
 
               if (
-                (prop.key.type === 'StringLiteral' ||
-                  prop.key.type === 'Identifier') &&
-                prop.value.type === 'FunctionExpression' &&
+                (prop.key.type === "StringLiteral" ||
+                  prop.key.type === "Identifier") &&
+                prop.value.type === "FunctionExpression" &&
                 keyName === propertyName
               ) {
                 // 拿到定义函数
@@ -141,7 +141,7 @@ export default {
 
                 // 在原代码中，函数体就一行 return 语句，取出其中的 argument 属性与调用节点替换
                 const firstStatement = orgFn.body.body?.[0];
-                if (firstStatement?.type !== 'ReturnStatement') return;
+                if (firstStatement?.type !== "ReturnStatement") return;
 
                 // 返回参数
                 const returnArgument = firstStatement.argument;
@@ -180,7 +180,7 @@ export default {
 
                   // 取出是哪个参数作为函数名来调用 因为可能会传递多个参数，取其中一个或几个
                   // 确保调用函数名必须是标识符才替换
-                  if (returnArgument.callee.type !== 'Identifier') return;
+                  if (returnArgument.callee.type !== "Identifier") return;
 
                   const callFnName = returnArgument.callee.name; // 形参的函数名
 
@@ -231,7 +231,7 @@ export default {
     if (Object.keys(usedObjects).length > 0) {
       traverse(ast, {
         ObjectProperty(path) {
-          let objectName = '';
+          let objectName = "";
 
           const parentPath = path.parentPath.parentPath;
 
