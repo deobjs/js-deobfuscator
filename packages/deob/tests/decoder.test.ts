@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { parse } from "@babel/parser";
-import { findDecoderByCallCount } from "../find-decoder-by-call-count";
-import { findDecoderByArray } from "../find-decoder-by-array";
-import { evalCode, generate } from "../..";
-import { decodeStrings } from "../decode-strings";
+import { findDecoderByCallCount } from "../src/transforms/find-decoder-by-call-count";
+import { findDecoderByArray } from "../src/transforms/find-decoder-by-array";
+import { evalCode, generate } from "../src";
+import { decodeStrings } from "../src/transforms/decode-strings";
 
 describe("decoder", async () => {
   it("find decoder by call count", () => {
