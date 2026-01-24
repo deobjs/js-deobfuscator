@@ -22,7 +22,7 @@ pnpm i
 
 The example directory contains some examples of obfuscated code I've encountered and configuration options. The structure of each subdirectory is as follows:
 
-```
+```text
 ├── xxx # Subdirectory
 │ ├── index.ts # Run the code
 │ ├── input.js # Obfuscated code

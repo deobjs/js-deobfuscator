@@ -8,9 +8,10 @@
   ],
   "type": "module",
   "scripts": {
-    "website:dev": "bun run -F website --elide-lines 0 dev",
-    "website:build": "bun run -F website --elide-lines 0 build",
-    "website:generate": "bun run -F website --elide-lines 0 generate",
+    "website:dev": "bun run --cwd website dev",
+    "website:build": "bun run --cwd website build",
+    "website:generate": "bun run --cwd website generate",
+    "build": "bun run --cwd packages/deob build",
     "lint": "oxlint",
     "format": "oxfmt",
     "test": "vitest"
