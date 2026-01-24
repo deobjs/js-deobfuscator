@@ -1,10 +1,12 @@
+import generate from "@babel/generator";
+import traverse from "@babel/traverse";
 // eslint-disable-next-line ts/ban-ts-comment
 // @ts-nocheck
 import * as t from "@babel/types";
-import traverse from "@babel/traverse";
-import generate from "@babel/generator";
-import { type Transform, getPropName } from "../ast-utils";
+
 import type { Objects } from "./save-objects";
+
+import { type Transform, getPropName } from "../ast-utils";
 
 /**
  * 对象属性替换 需要先执行 saveAllObject 用于保存所有变量
