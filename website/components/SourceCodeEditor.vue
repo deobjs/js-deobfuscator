@@ -10,7 +10,7 @@ interface Example {
   value: () => Promise<string>
 }
 
-const files = import.meta.glob('../../example/**/input.js', { as: 'raw' })
+const files = import.meta.glob('../../example/**/input.js', { query: '?raw', import: 'default' })
 
 const examples: Example[] = Object.entries(files).map(([key, value]) => ({
   name: key.replace('../../example/', ''),
@@ -36,10 +36,10 @@ async function handleExampleChange(event: Event) {
 function handleFileChange(event: Event) {
   const file = (event.target as HTMLInputElement).files![0]
 
-  // 检查文件后缀名是否为 .js
+  // Check if the file extension is .js
   if (file && !file.name.endsWith('.js')) {
     // eslint-disable-next-line no-alert
-    window.alert('请选择 js 文件')
+    window.alert('Please select a js file')
     return
   }
 

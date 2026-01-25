@@ -28,3 +28,6 @@ jobs:
 
       - name: Build (test)
         run: bun run build
+
+      - name: Build website
+        run: website:build
