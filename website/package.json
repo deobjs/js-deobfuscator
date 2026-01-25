@@ -28,7 +28,6 @@
     "nuxt-monaco-editor": "^1.4.0",
     "unocss": "^66.5.10",
     "vite-plugin-node-polyfills": "^0.16.0",
-    "vue": "^3.5.26",
-    "vue-router": "^4.6.4"
+    "vue": "^3.5.26"
   }
 }
