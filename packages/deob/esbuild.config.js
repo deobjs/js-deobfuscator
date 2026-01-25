@@ -7,10 +7,6 @@ const configs = [
   {
     entryPoints: ["src/index.ts"],
   },
-  {
-    entryPoints: ["src/cli.ts"],
-    bundle: false,
-  },
 ];
 
 for (const config of configs) {

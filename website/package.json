@@ -19,7 +19,6 @@
     "splitpanes": "^4.0.4"
   },
   "devDependencies": {
-    "@iconify-json/ri": "^1.2.6",
     "@iconify-json/vscode-icons": "^1.2.37",
     "@nuxt/devtools": "latest",
     "@types/json-to-ast": "^2.1.4",
