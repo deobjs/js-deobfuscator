@@ -1,7 +1,6 @@
 import generate from "@babel/generator";
 import traverse from "@babel/traverse";
 // eslint-disable-next-line ts/ban-ts-comment
-// @ts-nocheck
 import * as t from "@babel/types";
 
 import type { Objects } from "./save-objects";
@@ -9,7 +8,7 @@ import type { Objects } from "./save-objects";
 import { type Transform, getPropName } from "../ast-utils";
 
 /**
- * 对象属性替换 需要先执行 saveAllObject 用于保存所有变量
+ * To replace object properties, you need to first execute `saveAllObject` to save all variables.
  * @example
  * var r = {
  *   "PzXHf": "0|2|4|3|1",
@@ -25,7 +24,7 @@ import { type Transform, getPropName } from "../ast-utils";
  * _0x3028("foo")
  */
 export default {
-  name: "对象属性引用替换",
+  name: "Object property reference replacement",
   run(ast, state, objects) {
     if (!objects) return;
 
@@ -33,12 +32,12 @@ export default {
     const usedObjects: Record<any, any> = {};
 
     /**
-     * 字面量花指令还原
+     * Literal quantification command restoration
      * r["PzXHf"] ---> "0|2|4|3|1"
      */
     traverse(ast, {
       MemberExpression(path) {
-        // 父级表达式不能是赋值语句
+        // The parent expression cannot be an assignment statement.
         const asignment = path.parentPath;
         if (!asignment || asignment?.type === "AssignmentExpression") return;
 
@@ -49,7 +48,7 @@ export default {
         ) {
           const objectName = object.name;
 
-          // 找到 objectName 的定义位置
+          // Find the definition location of objectName
           const binding = path.scope.getBinding(objectName);
           if (!binding) return;
 
@@ -70,14 +69,14 @@ export default {
                   keyName === propertyName &&
                   t.isLiteral(prop.value)
                 ) {
-                  // 还需要判断 objectName[propertyName] 是否被修改过
+                  // It is also necessary to check whether objectName[propertyName] has been modified.
                   const binding = path.scope.getBinding(objectName);
                   if (
                     binding &&
                     binding.constant &&
                     binding.constantViolations.length === 0
                   ) {
-                    // 针对一些特殊代码不进行处理 如 _0x52627b["QqaUY"]++
+                    // Some special codes are not processed, such as _0x52627b["QqaUY"]++
                     if (path.parent.type === "UpdateExpression") return;
 
                     usedMap.set(
@@ -100,7 +99,7 @@ export default {
     });
 
     /**
-     * 函数花指令还原
+     * Function junk instruction restoration
      * r["LeQrV"](_0x3028, "foo");  --->  _0x3028("foo");
      */
     traverse(ast, {
@@ -113,7 +112,7 @@ export default {
           const objectName = callee.object.name;
           const propertyName = getPropName(callee.property);
 
-          // 找到 objectName 的定义位置
+          // Find the definition location of objectName
           const binding = path.scope.getBinding(objectName);
           if (!binding) return;
 
@@ -124,7 +123,7 @@ export default {
 
             const properties = objectInit.properties;
 
-            // 实际传递参数
+            // Actual transmitted parameters
             const argumentList = path.node.arguments;
 
             for (const prop of properties) {
@@ -138,14 +137,14 @@ export default {
                 prop.value.type === "FunctionExpression" &&
                 keyName === propertyName
               ) {
-                // 拿到定义函数
+                // Get the defined function
                 const orgFn = prop.value;
 
-                // 在原代码中，函数体就一行 return 语句，取出其中的 argument 属性与调用节点替换
+                // In the original code, the function body consists of only one line of return statement; the argument attribute is extracted and replaced with the calling node.
                 const firstStatement = orgFn.body.body?.[0];
                 if (firstStatement?.type !== "ReturnStatement") return;
 
-                // 返回参数
+                // Return parameters
                 const returnArgument = firstStatement.argument;
 
                 let isReplace = false;
@@ -153,6 +152,7 @@ export default {
                   // _0x5a2810 + _0x2b32f4
                   const binaryExpression = t.binaryExpression(
                     returnArgument.operator,
+                    // @ts-expect-error
                     argumentList[0],
                     argumentList[1],
                   );
@@ -162,6 +162,7 @@ export default {
                   // _0x5a2810 || _0x2b32f4
                   const logicalExpression = t.logicalExpression(
                     returnArgument.operator,
+                    // @ts-expect-error
                     argumentList[0],
                     argumentList[1],
                   );
@@ -171,6 +172,7 @@ export default {
                   // !_0x5a2810
                   const unaryExpression = t.unaryExpression(
                     returnArgument.operator,
+                    // @ts-expect-error
                     argumentList[0],
                   );
                   path.replaceWith(unaryExpression);
@@ -180,20 +182,22 @@ export default {
                   //   return _0x1d0a4d();
                   // }
 
-                  // 取出是哪个参数作为函数名来调用 因为可能会传递多个参数，取其中一个或几个
-                  // 确保调用函数名必须是标识符才替换
+                  // Retrieve which parameter is used as the function name for calling the function, because multiple parameters may be passed; select one or more of them.
+                  // Ensure that the called function name is an identifier before replacing it.
                   if (returnArgument.callee.type !== "Identifier") return;
 
-                  const callFnName = returnArgument.callee.name; // 形参的函数名
+                  const callFnName = returnArgument.callee.name; // Function name of formal parameters
 
-                  // 找到从传递的多个参数中 定位索引
+                  // Find the index from the multiple passed parameters
                   const callIndex = orgFn.params.findIndex(
+                    // @ts-expect-error
                     (a) => a.name === callFnName,
                   );
 
-                  // 再从实际参数(实参)中找到真正函数名
+                  // Then find the actual function name from the actual parameters (arguments).
                   const realFnName = argumentList.splice(callIndex, 1)[0];
                   const callExpression = t.callExpression(
+                    // @ts-expect-error
                     realFnName,
                     argumentList,
                   );
@@ -260,4 +264,5 @@ export default {
 
     if (removeSet.size > 0) console.log(`已移除key列表:`, removeSet);
   },
+  // @ts-expect-error
 } satisfies Transform<Objects>;
