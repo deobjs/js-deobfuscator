@@ -3,21 +3,16 @@
   "license": "MIT",
   "workspaces": [
     "packages/*",
-    "example",
-    "website"
+    "example"
   ],
   "type": "module",
   "scripts": {
-    "website:dev": "bun run --cwd website dev",
-    "website:build": "bun run --cwd website build",
-    "website:generate": "bun run --cwd website generate",
     "build": "bun run --cwd packages/deob build",
     "lint": "oxlint",
     "format": "oxfmt",
     "test": "vitest"
   },
   "devDependencies": {
-    "deob": "workspace:*",
     "oxfmt": "^0.26.0",
     "oxlint": "^1.41.0",
     "typescript": "^5.9.3",
