@@ -1,5 +1,4 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Default",
   "compilerOptions": {
     "composite": false,
@@ -20,9 +19,5 @@
   },
   "exclude": [
     "node_modules"
-  ],
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node"
-  }
+  ]
 }
